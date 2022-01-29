@@ -1,0 +1,23 @@
+#easy
+    add correction functionality
+    ask for passcode when login if not null
+    decrease the bank balance
+    change target saving
+    override the back button
+    dynamic line graph and radar graph
+    shimmer effects everywhere
+    ask for localhost if not found
+    user preference globally for month, year, day
+    last login in user
+    use commas
+    remove passcode
+
+#hard
+    google sign in support non mandatory, anonymous user id
+    dark theme, new UI, Animations, logo and splash screen
+    comments and tooltip for hearing aids
+    avatar choices when sign up, emoji to be dynamic
+    clear data and deactivate functionality
+    donate button to donate through e-sewa
+    try catch socket exceptions
+    navigate to new page when clicked on a category given the related words and related transactions
