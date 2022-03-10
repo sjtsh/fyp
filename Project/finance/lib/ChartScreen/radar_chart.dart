@@ -1,20 +1,18 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../Providers/ThemeManagement.dart';
 
 class RadarChartPersonal extends StatelessWidget {
   RadarChartPersonal({Key? key}) : super(key: key);
 
-  final List colors = [
-    const Color(0xffC31FE6),
-    const Color(0xff3A57E8),
-    Colors.green,
-  ];
   final aDataset = [
     [3033, 3687, 2572],
     [3320, 2129, 2110],
     [987, 1200, 1101]
   ];
-  final radarTitles = ['Predicted','Actual','Last Month'];
+  final radarTitles = ['Predicted', 'Actual', 'Last Month'];
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +39,13 @@ class RadarChartPersonal extends StatelessWidget {
                             height: 10,
                             width: 10,
                             decoration: BoxDecoration(
-                              color: colors[["Expense", "Income", "Savings"].indexOf(element)],
+                              color: context
+                                  .watch<ThemeManagement>()
+                                  .radarChartColors[[
+                                "Expense",
+                                "Income",
+                                "Savings"
+                              ].indexOf(element)],
                               shape: BoxShape.circle,
                             ),
                           ),
@@ -51,7 +55,9 @@ class RadarChartPersonal extends StatelessWidget {
                           Text(
                             element,
                             style: TextStyle(
-                              color: Colors.black.withOpacity(0.5),
+                              color: context
+                                  .watch<ThemeManagement>()
+                                  .allTextColorOpacity5,
                               fontSize: 10,
                             ),
                           ),
@@ -71,17 +77,29 @@ class RadarChartPersonal extends StatelessWidget {
                 getTitle: (index) {
                   return radarTitles[index];
                 },
-                radarBorderData:
-                    BorderSide(color: Colors.black.withOpacity(0.5), width: 1),
-                tickBorderData:
-                    BorderSide(color: Colors.black.withOpacity(0.5), width: 1),
+                ticksTextStyle: TextStyle(
+                    color: context.watch<ThemeManagement>().allTextColor),
+                titleTextStyle: TextStyle(
+                    color: context.watch<ThemeManagement>().allTextColor),
+                radarBorderData: BorderSide(
+                    color:
+                        context.watch<ThemeManagement>().allTextColorOpacity5,
+                    width: 1),
+                tickBorderData: BorderSide(
+                    color:
+                        context.watch<ThemeManagement>().allTextColorOpacity5,
+                    width: 1),
                 dataSets: aDataset
                     .map(
                       (dataset) => RadarDataSet(
-                        borderColor: colors[aDataset.indexOf(dataset)],
+                        borderColor: context
+                            .watch<ThemeManagement>()
+                            .radarChartColors[aDataset.indexOf(dataset)],
                         borderWidth: 2,
-                        fillColor:
-                            colors[aDataset.indexOf(dataset)].withOpacity(0.3),
+                        fillColor: context
+                            .watch<ThemeManagement>()
+                            .radarChartColors[aDataset.indexOf(dataset)]
+                            .withOpacity(0.3),
                         dataEntries: dataset
                             .map(
                               (e) => RadarEntry(

@@ -37,6 +37,12 @@ dependencies:
   shimmer: ^2.0.0
   shared_preferences: ^2.0.6
   zoom_widget: ^0.2.1
+  google_sign_in: ^4.5.1
+  flutter_facebook_auth: ^3.5.0
+  firebase_core:
+  firebase_auth:
+  countup:
+  provider:
 
 
   # The following adds the Cupertino Icons font to your application.

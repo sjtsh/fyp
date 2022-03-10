@@ -5,14 +5,15 @@ import 'package:finance/Entities/transaction.dart';
 import 'package:finance/Entities/transaction.dart';
 import 'package:http/http.dart' as http;
 
+import '../Entities/users.dart';
 import '../database.dart';
 
 class TransactionService {
-  Future<List<Transaction>> fetchTransactions(String dropdownValue) async {
+  Future<List<Transaction>> fetchTransactions(String dropdownValue, User meUser) async {
     final res = await http.get(
       Uri.parse("http://$localhost/transactions/"),
       headers: <String, String>{
-        'userID': meUser!.id.toString(),
+        'userID': meUser.id.toString(),
         'dropdownValue': dropdownValue,
       },
     );
@@ -30,17 +31,16 @@ class TransactionService {
   Future<Transaction> createTransaction(
       {required int categoryID,
       required String remark,
-      required double amount,}) async {
+      required double amount,required User meUser}) async {
     final res = await http.post(
       Uri.parse("http://$localhost/transaction/insert/"),
       body: <String, String>{
-        'user': meUser!.id.toString(),
+        'user': meUser.id.toString(),
         'category': categoryID.toString(),
         'remark': remark.toString(),
         'amount': amount.toString(),
       },
     );
-
     if (res.statusCode == 200) {
       Transaction transaction = Transaction.fromJson(jsonDecode(res.body));
       return transaction;

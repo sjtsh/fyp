@@ -4,12 +4,14 @@ import 'package:finance/EntityServices/transactionService.dart';
 import 'package:finance/database.dart';
 import 'package:finance/Screens/TransactionsScreen/singular_transaction.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../../Providers/LogInManagement.dart';
+import '../../Providers/ThemeManagement.dart';
+import '../../Skeletons/TransactionSkeleton.dart';
 import 'AddTransaction/add_transaction.dart';
 
 class TransactionsScreen extends StatefulWidget {
-  const TransactionsScreen({Key? key}) : super(key: key);
-
   @override
   State<TransactionsScreen> createState() => _TransactionsScreenState();
 }
@@ -18,13 +20,17 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
   String dropDownValue = "All";
   bool isDisabled = false;
 
+  refreshTransaction() {
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 12.0),
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: context.watch<ThemeManagement>().containerColors,
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
@@ -40,9 +46,12 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 12),
               child: Row(
                 children: [
-                  const Expanded(
+                  Expanded(
                     child: Text(
                       "Transactions",
+                      style: TextStyle(
+                        color: context.watch<ThemeManagement>().allTextColor,
+                      ),
                     ),
                   ),
                   DropdownButton(
@@ -52,11 +61,20 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                       });
                     },
                     value: dropDownValue,
+                    dropdownColor: context.watch<ThemeManagement>().containerColors,
                     elevation: 0,
                     underline: Container(),
                     items: ["All", "Month", "Year", "Day"]
                         .map((e) => DropdownMenuItem(
-                              child: Text(e, style: TextStyle(fontSize: 14)),
+                              child: Text(
+                                e,
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: context
+                                      .watch<ThemeManagement>()
+                                      .allTextColor,
+                                ),
+                              ),
                               value: e,
                             ))
                         .toList(),
@@ -66,41 +84,46 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
             ),
             Padding(
               padding: const EdgeInsets.only(left: 12.0, right: 12, bottom: 6),
-              child: Material(
-                child: InkWell(
-                  onTap: () {
-                    if (!isDisabled) {
+              child: InkWell(
+                onTap: () {
+                  if (!isDisabled) {
+                    setState(() {
+                      isDisabled = true;
+                    });
+                    CategoryService()
+                        .fetchCategorys(
+                            context.read<LogInManagement>().meUser!)
+                        .then((value) {
+                      Navigator.push(context, MaterialPageRoute(builder: (_) {
+                        return AddTransaction(value, refreshTransaction);
+                      }));
                       setState(() {
-                        isDisabled = true;
+                        isDisabled = false;
                       });
-                      CategoryService().fetchCategorys().then((value) {
-                        Navigator.push(context, MaterialPageRoute(builder: (_) {
-                          return AddTransaction(value);
-                        }));
-                        setState(() {
-                          isDisabled = false;
-                        });
-                      });
-                    }
-                  },
-                  child: Container(
-                    height: 50,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      color: const Color(0xffF4F4F4),
-                      border: Border.all(
-                        color: Colors.black.withOpacity(0.1),
-                      ),
+                    });
+                  }
+                },
+                child: Container(
+                  height: 50,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    color: context.watch<ThemeManagement>().background,
+                    border: Border.all(
+                      color: Colors.black.withOpacity(0.1),
                     ),
-                    child: const Center(
-                      child: Icon(Icons.add),
+                  ),
+                  child: Center(
+                    child: Icon(
+                      Icons.add,
+                      color: context.watch<ThemeManagement>().allIconColor,
                     ),
                   ),
                 ),
               ),
             ),
             FutureBuilder(
-              future: TransactionService().fetchTransactions(dropDownValue),
+              future: TransactionService().fetchTransactions(
+                  dropDownValue, context.read<LogInManagement>().meUser!),
               builder: (context, AsyncSnapshot snapshot) {
                 if (snapshot.hasData) {
                   List<Transaction> transactions = snapshot.data;
@@ -110,8 +133,10 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                         .toList(),
                   );
                 }
-                return Center(
-                  child: CircularProgressIndicator(),
+                return Column(
+                  children: ["", "", "", "", "", "", "", "", "", "", "", ""]
+                      .map((e) => SingularTransactionSkeleton())
+                      .toList(),
                 );
               },
             ),

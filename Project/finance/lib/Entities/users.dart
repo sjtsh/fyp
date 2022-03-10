@@ -1,5 +1,6 @@
 class User {
   int id;
+  String? email;
   String avatarURL;
   String name;
   double monthlyTargetSaving;
@@ -19,6 +20,7 @@ class User {
     required this.dateTime,
     required this.isDeactivated,
     this.themePreference = "Light",
+    this.email,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -32,6 +34,7 @@ class User {
       dateTime: DateTime.parse(json["date_time"]),
       isDeactivated: json["is_deactivated"],
       themePreference: json['theme_preference'],
+      email: json['email']
     );
   }
 }

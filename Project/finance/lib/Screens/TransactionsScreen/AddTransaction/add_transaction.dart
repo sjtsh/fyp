@@ -1,12 +1,21 @@
 import 'package:finance/Entities/category.dart';
 import 'package:finance/EntityServices/transactionService.dart';
 import 'package:finance/Screens/CategoryScreen/AddCategory/add_category.dart';
+import 'package:finance/database.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../../../Providers/LogInManagement.dart';
+import '../../../Providers/ThemeManagement.dart';
 
 class AddTransaction extends StatefulWidget {
-  List<Category> categories;
+  final List<Category> categories;
+  final Function refreshTransaction;
 
-  AddTransaction(this.categories);
+  AddTransaction(
+    this.categories,
+    this.refreshTransaction,
+  );
 
   @override
   State<AddTransaction> createState() => _AddTransactionState();
@@ -30,6 +39,7 @@ class _AddTransactionState extends State<AddTransaction> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: context.watch<ThemeManagement>().background,
       body: Column(
         children: [
           const SizedBox(
@@ -41,13 +51,20 @@ class _AddTransactionState extends State<AddTransaction> {
                 onPressed: () {
                   Navigator.pop(context);
                 },
-                icon: Icon(Icons.arrow_back_ios_rounded),
+                icon: Icon(
+                  Icons.arrow_back_ios_rounded,
+                  color: context.watch<ThemeManagement>().allIconColor,
+                ),
               ),
               Expanded(
                 child: Center(
-                  child: const Text(
+                  child: Text(
                     "Add Transaction",
-                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                      color: context.watch<ThemeManagement>().allTextColor,
+                    ),
                   ),
                 ),
               ),
@@ -69,20 +86,25 @@ class _AddTransactionState extends State<AddTransaction> {
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               child: Container(
                 decoration: BoxDecoration(
-                  color: const Color(0xffE9E9E9),
+                  color:
+                      context.watch<ThemeManagement>().textfieldBackgroundColor,
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: TextField(
                   maxLines: 100,
                   controller: remarkController,
                   autofocus: false,
+                  style: TextStyle(
+                    color: context.watch<ThemeManagement>().allTextColor,
+                  ),
                   decoration: InputDecoration(
                     contentPadding: const EdgeInsets.all(12.0),
                     hintText: "Remark",
                     hintStyle: TextStyle(
-                      color: Colors.black.withOpacity(0.5),
+                      color:
+                          context.watch<ThemeManagement>().allTextColorOpacity5,
                     ),
-                    fillColor: Colors.green,
+                    fillColor: Colors.red,
                     enabledBorder: isRemarkEmpty
                         ? OutlineInputBorder(
                             borderSide: const BorderSide(
@@ -116,7 +138,8 @@ class _AddTransactionState extends State<AddTransaction> {
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             child: Container(
               decoration: BoxDecoration(
-                color: const Color(0xffE9E9E9),
+                color:
+                    context.watch<ThemeManagement>().textfieldBackgroundColor,
                 borderRadius: BorderRadius.circular(12),
               ),
               child: TextField(
@@ -124,11 +147,15 @@ class _AddTransactionState extends State<AddTransaction> {
                 keyboardType: TextInputType.number,
                 maxLines: 1,
                 autofocus: false,
+                style: TextStyle(
+                  color: context.watch<ThemeManagement>().allTextColor,
+                ),
                 decoration: InputDecoration(
                   contentPadding: const EdgeInsets.all(12.0),
                   hintText: "Amount",
                   hintStyle: TextStyle(
-                    color: Colors.black.withOpacity(0.5),
+                    color:
+                        context.watch<ThemeManagement>().allTextColorOpacity5,
                   ),
                   fillColor: Colors.green,
                   enabledBorder: isAmountEmpty
@@ -163,46 +190,48 @@ class _AddTransactionState extends State<AddTransaction> {
             padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6),
             child: Row(
               children: [
-                Container(
-                  margin: const EdgeInsets.only(right: 12),
-                  padding: const EdgeInsets.only(right: 12),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: const Color(0xffe9e9e9),
-                  ),
-                  child: DropdownButton(
-                    dropdownColor: const Color(0xffe9e9e9),
-                    onChanged: (i) {
-                      setState(() {
-                        dropDownValue = i as Category;
-                      });
-                    },
-                    icon: const Icon(Icons.arrow_drop_down_sharp),
-                    underline: Container(),
-                    value: dropDownValue,
-                    items: widget.categories
-                        .map(
-                          (e) => DropdownMenuItem(
-                            value: e,
-                            child: SizedBox(
-                              width: 170,
+                Expanded(
+                  child: Container(
+                    margin: const EdgeInsets.only(right: 12),
+                    padding: const EdgeInsets.only(right: 12),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      color: context.watch<ThemeManagement>().containerColors,
+                    ),
+                    child: DropdownButton(
+                      dropdownColor:
+                          context.watch<ThemeManagement>().containerColors,
+                      onChanged: (i) {
+                        setState(() {
+                          dropDownValue = i as Category;
+                        });
+                      },
+                      underline: Container(),
+                      value: dropDownValue,
+                      items: widget.categories
+                          .map(
+                            (e) => DropdownMenuItem(
+                              value: e,
                               child: Padding(
                                 padding: const EdgeInsets.all(12.0),
-                                child: Row(
-                                  children: [
-                                    Text(e.name),
-                                    Expanded(child: Container()),
-                                  ],
+                                child: Text(
+                                  e.name,
+                                  style: TextStyle(
+                                    color: context
+                                        .watch<ThemeManagement>()
+                                        .allTextColor,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        )
-                        .toList(),
+                          )
+                          .toList(),
+                    ),
                   ),
                 ),
                 Expanded(
-                  child: Container(
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
                     decoration: BoxDecoration(
                       color: (dropDownValue?.isExpense ?? true)
                           ? Colors.red
@@ -219,12 +248,12 @@ class _AddTransactionState extends State<AddTransaction> {
                             context,
                             MaterialPageRoute(
                               builder: (_) {
-                                return AddCategory();
+                                return AddCategory(() {});
                               },
                             ),
                           );
                         },
-                        child: const Icon(Icons.add, color: Colors.white),
+                        child: Icon(Icons.add, color: Colors.white),
                       ),
                     ),
                   ),
@@ -243,18 +272,23 @@ class _AddTransactionState extends State<AddTransaction> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Material(
-                      color: (dropDownValue?.isExpense ?? true)
-                          ? Colors.red
-                          : Colors.white,
-                      child: Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: Center(
-                          child: Text(
-                            "Expense",
-                            style: TextStyle(
-                              color: (dropDownValue?.isExpense ?? true)
-                                  ? Colors.white
-                                  : Colors.black,
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 200),
+                        color: (dropDownValue?.isExpense ?? true)
+                            ? Colors.red
+                            : context.watch<ThemeManagement>().containerColors,
+                        child: Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Center(
+                            child: Text(
+                              "Expense",
+                              style: TextStyle(
+                                color: (dropDownValue?.isExpense ?? true)
+                                    ? Colors.white
+                                    : context
+                                        .watch<ThemeManagement>()
+                                        .allTextColor,
+                              ),
                             ),
                           ),
                         ),
@@ -272,18 +306,23 @@ class _AddTransactionState extends State<AddTransaction> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Material(
-                      color: !(dropDownValue?.isExpense ?? true)
-                          ? Colors.green
-                          : Colors.white,
-                      child: Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: Center(
-                          child: Text(
-                            "Income",
-                            style: TextStyle(
-                              color: !(dropDownValue?.isExpense ?? true)
-                                  ? Colors.white
-                                  : Colors.black,
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 200),
+                        color: !(dropDownValue?.isExpense ?? true)
+                            ? Colors.green
+                            : context.watch<ThemeManagement>().containerColors,
+                        child: Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Center(
+                            child: Text(
+                              "Income",
+                              style: TextStyle(
+                                color: !(dropDownValue?.isExpense ?? true)
+                                    ? Colors.white
+                                    : context
+                                        .watch<ThemeManagement>()
+                                        .allTextColor,
+                              ),
                             ),
                           ),
                         ),
@@ -297,7 +336,8 @@ class _AddTransactionState extends State<AddTransaction> {
           Padding(
             padding: const EdgeInsets.only(
                 left: 12, right: 12, bottom: 12.0, top: 6),
-            child: Container(
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
               clipBehavior: Clip.hardEdge,
               decoration: BoxDecoration(
                 color: (dropDownValue?.isExpense ?? true)
@@ -323,18 +363,39 @@ class _AddTransactionState extends State<AddTransaction> {
                       categoryID: dropDownValue?.id ?? 0,
                       remark: remarkController.text,
                       amount: double.parse(amountController.text),
+                      meUser: context.read<LogInManagement>().meUser!,
                     )
                         .then((value) {
+                      if (dropDownValue!.isExpense) {
+                        context.read<LogInManagement>().meUser?.bankBalance -=
+                            double.parse(amountController.text);
+                        context.read<LogInManagement>().userChange();
+                      } else {
+                        context.read<LogInManagement>().meUser?.bankBalance +=
+                            double.parse(amountController.text);
+                        context.read<LogInManagement>().userChange();
+                      }
                       setState(() {
                         isDisabled = false;
                       });
+                      widget.refreshTransaction();
                       Navigator.pop(context);
                     });
                   }
                 },
-                child: const Text(
-                  "Add",
-                  style: TextStyle(color: Colors.white),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Add",
+                      style: TextStyle(color: Colors.white, fontSize: 16),
+                    ),
+                    SizedBox(width: 6,),
+                    Icon(
+                      Icons.arrow_forward_rounded,
+                      color: Colors.white,
+                    ),
+                  ],
                 ),
               ),
             ),

@@ -1,10 +1,15 @@
 import 'package:finance/Entities/category.dart';
 import 'package:finance/EntityServices/categoryService.dart';
+import 'package:finance/Providers/LogInManagement.dart';
 import 'package:finance/database.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:zoom_widget/zoom_widget.dart';
+
+import '../Providers/ThemeManagement.dart';
+import '../Skeletons/PieChartSkeleton.dart';
 
 class PieChartPersonal extends StatefulWidget {
   const PieChartPersonal({Key? key}) : super(key: key);
@@ -16,19 +21,12 @@ class PieChartPersonal extends StatefulWidget {
 class _PieChartPersonalState extends State<PieChartPersonal> {
   List<List> pieListCategories = [[], [], []];
   List pieListCategories1 = [];
-  List colors = [
-    const Color(0xffC31FE6),
-    const Color(0xff3A57E8),
-    Colors.blue,
-    Colors.red,
-    Colors.orange,
-    Colors.green,
-  ];
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: CategoryService().fetchCategorys(),
+        future: CategoryService()
+            .fetchCategorys(context.read<LogInManagement>().meUser!),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.hasData) {
             List<Category> allCategories = snapshot.data;
@@ -101,11 +99,15 @@ class _PieChartPersonalState extends State<PieChartPersonal> {
                                             height: 10,
                                             width: 10,
                                             decoration: BoxDecoration(
-                                              color: colors[pieListCategories1
-                                                  .indexOf(pieListCategories1
-                                                      .firstWhere((element) =>
-                                                          element[0] ==
-                                                          aRow[0]))],
+                                              color: context
+                                                      .watch<ThemeManagement>()
+                                                      .pieChartColors[
+                                                  pieListCategories1.indexOf(
+                                                      pieListCategories1
+                                                          .firstWhere(
+                                                              (element) =>
+                                                                  element[0] ==
+                                                                  aRow[0]))],
                                               shape: BoxShape.circle,
                                             ),
                                           ),
@@ -116,7 +118,7 @@ class _PieChartPersonalState extends State<PieChartPersonal> {
                                             aRow[0],
                                             style: TextStyle(
                                               color:
-                                                  Colors.black.withOpacity(0.5),
+                                            context.watch<ThemeManagement>().allTextColorOpacity5,
                                               fontSize: 10,
                                             ),
                                           ),
@@ -157,8 +159,10 @@ class _PieChartPersonalState extends State<PieChartPersonal> {
                                     titleStyle: const TextStyle(
                                         color: Colors.white, fontSize: 10),
                                     radius: 100,
-                                    color:
-                                        colors[pieListCategories1.indexOf(e)],
+                                    color: context
+                                            .watch<ThemeManagement>()
+                                            .pieChartColors[
+                                        pieListCategories1.indexOf(e)],
                                     value: e[1] + 0.0),
                               )
                               .toList(),
@@ -176,9 +180,7 @@ class _PieChartPersonalState extends State<PieChartPersonal> {
               ),
             );
           }
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
+          return PieChartSkeleton();
         });
   }
 }

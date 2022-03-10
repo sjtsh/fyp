@@ -2,12 +2,20 @@ import 'package:finance/EntityServices/userService.dart';
 import 'package:finance/database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../Entities/users.dart';
+import '../Providers/LogInManagement.dart';
+import '../Providers/ThemeManagement.dart';
+import '../main_screen.dart';
 
 class PinCodeScreen extends StatefulWidget {
   final int? pinCode;
-  final Function refresh;
+  final bool isLogged;
+  final bool isToBeRemoved;
 
-  PinCodeScreen({this.pinCode, required this.refresh});
+  PinCodeScreen(
+      {this.pinCode, this.isLogged = true, this.isToBeRemoved = true});
 
   @override
   State<PinCodeScreen> createState() => _PinCodeScreenState();
@@ -19,41 +27,97 @@ class _PinCodeScreenState extends State<PinCodeScreen> {
   int? initialPasscode;
 
   void keyEntered(int f) {
-    setState(() {
-      passcode += f.toString();
-      if (passcode.length == 4) {
-        if (widget.pinCode != null && !isVerified) {
-          widget.pinCode == int.parse(passcode) ? isVerified = true : 1;
-        } else {
-          if (initialPasscode == null) {
-            initialPasscode = int.parse(passcode);
-          } else {
-            if (initialPasscode == int.parse(passcode)) {
-              int a = int.parse(passcode);
-              UserService().changePinCode(pinCode: a).then((value) {
-                meUser = value;
-                widget.refresh();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text("New password has been set"),
-                  ),
-                );
-                Navigator.pop(context);
-              });
+    if (widget.isLogged) {
+      if (widget.isToBeRemoved) {
+        setState(() {
+          passcode += f.toString();
+          if (passcode.length == 4) {
+            if (widget.pinCode != null && !isVerified) {
+              widget.pinCode == int.parse(passcode) ? isVerified = true : 1;
             } else {
-              initialPasscode = null;
+              if (initialPasscode == null) {
+                initialPasscode = int.parse(passcode);
+              } else {
+                if (initialPasscode == int.parse(passcode)) {
+                  int a = int.parse(passcode);
+                  UserService()
+                      .changePinCode(
+                          pinCode: a,
+                          meUser: context.read<LogInManagement>().meUser!)
+                      .then((value) {
+                    context.read<LogInManagement>().meUser = value;
+                    context.read<LogInManagement>().userChange();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text("New password has been set"),
+                      ),
+                    );
+                    Navigator.pop(context);
+                  });
+                } else {
+                  initialPasscode = null;
+                }
+              }
             }
+            passcode = "";
           }
-        }
-        passcode = "";
+        });
+      } else {
+        setState(() {
+          passcode += f.toString();
+          if (passcode.length == 4) {
+            if (widget.pinCode == int.parse(passcode)) {
+              UserService()
+                  .removePinCode(
+                context.read<LogInManagement>().meUser!,
+              )
+                  .then((bool success) {
+                if (success) {
+                  context.read<LogInManagement>().meUser?.pinCode = null;
+                  context.read<LogInManagement>().userChange();
+                  Navigator.pop(context);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text("Password was removed"),
+                    ),
+                  );
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text("Password couldnt be removed"),
+                    ),
+                  );
+                }
+              });
+            }
+            passcode = "";
+          }
+        });
       }
-    });
+    } else {
+      setState(() {
+        passcode += f.toString();
+        if (passcode.length == 4) {
+          if (widget.pinCode == int.parse(passcode)) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) {
+                  return MainScreen();
+                },
+              ),
+            );
+          }
+          passcode = "";
+        }
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xffF4F4F4),
+      backgroundColor: context.watch<ThemeManagement>().background,
       body: Column(
         children: [
           const SizedBox(
@@ -70,11 +134,11 @@ class _PinCodeScreenState extends State<PinCodeScreen> {
               child: Container(
                 height: 160,
                 width: 160,
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   color: Color(0xff5A6FF0),
                   shape: BoxShape.circle,
                   image: DecorationImage(
-                      image: AssetImage("assets/me.png"), fit: BoxFit.contain),
+                      image: NetworkImage("http://$localhost/" + context.read<LogInManagement>().meUser!.avatarURL), fit: BoxFit.contain),
                 ),
               ),
             ),
@@ -88,6 +152,8 @@ class _PinCodeScreenState extends State<PinCodeScreen> {
                     ? "Set your 4 digit pin"
                     : "Re-enter your 4 digit code")
                 : "Enter your 4 digit code",
+            style:
+                TextStyle(color: context.watch<ThemeManagement>().allTextColor),
           ),
           const SizedBox(
             height: 12,
@@ -152,7 +218,9 @@ class _PinCodeScreenState extends State<PinCodeScreen> {
                                               shape: BoxShape.circle,
                                             ),
                                             child: Material(
-                                              color: const Color(0xffC4C4C4),
+                                              color: context
+                                                  .watch<ThemeManagement>()
+                                                  .materialButtonColor,
                                               child: InkWell(
                                                 splashColor:
                                                     const Color(0xff5A6FF0),
@@ -196,21 +264,25 @@ class _PinCodeScreenState extends State<PinCodeScreen> {
                               shape: BoxShape.circle,
                             ),
                             child: Material(
-                              color: const Color(0xffC4C4C4),
+                              color: context
+                                  .watch<ThemeManagement>()
+                                  .materialButtonColor,
                               child: InkWell(
-                                splashColor: const Color(0xff5A6FF0),
+                                splashColor: context
+                                    .watch<ThemeManagement>()
+                                    .logoBgColor,
                                 borderRadius: BorderRadius.circular(100),
                                 onTap: () {
                                   setState(() {
                                     passcode = "";
                                   });
                                 },
-                                child: const SizedBox(
+                                child:  SizedBox(
                                   height: 80,
                                   width: 80,
                                   child: Center(
                                     child: Icon(
-                                      Icons.delete,
+                                      Icons.delete, color: context.watch<ThemeManagement>().allIconColor,
                                     ),
                                   ),
                                 ),
@@ -227,14 +299,18 @@ class _PinCodeScreenState extends State<PinCodeScreen> {
                               shape: BoxShape.circle,
                             ),
                             child: Material(
-                              color: const Color(0xffC4C4C4),
+                              color: context
+                                  .watch<ThemeManagement>()
+                                  .materialButtonColor,
                               child: InkWell(
-                                splashColor: const Color(0xff5A6FF0),
+                                splashColor: context
+                                    .watch<ThemeManagement>()
+                                    .logoBgColor,
                                 borderRadius: BorderRadius.circular(100),
                                 onTap: () {
                                   keyEntered(0);
                                 },
-                                child: const SizedBox(
+                                child:  SizedBox(
                                   height: 80,
                                   width: 80,
                                   child: Center(
@@ -243,6 +319,9 @@ class _PinCodeScreenState extends State<PinCodeScreen> {
                                         "0",
                                         style: TextStyle(
                                           fontSize: 30,
+                                          color: context
+                                              .watch<ThemeManagement>()
+                                              .allTextColor,
                                         ),
                                       ),
                                     ),
@@ -261,9 +340,13 @@ class _PinCodeScreenState extends State<PinCodeScreen> {
                               shape: BoxShape.circle,
                             ),
                             child: Material(
-                              color: const Color(0xffC4C4C4),
+                              color: context
+                                  .watch<ThemeManagement>()
+                                  .materialButtonColor,
                               child: InkWell(
-                                splashColor: const Color(0xff5A6FF0),
+                                splashColor: context
+                                    .watch<ThemeManagement>()
+                                    .logoBgColor,
                                 borderRadius: BorderRadius.circular(100),
                                 onTap: () {
                                   setState(() {
@@ -271,12 +354,12 @@ class _PinCodeScreenState extends State<PinCodeScreen> {
                                         0, passcode.length - 1);
                                   });
                                 },
-                                child: const SizedBox(
+                                child:  SizedBox(
                                   height: 80,
                                   width: 80,
                                   child: Center(
                                     child: Icon(
-                                      Icons.backspace,
+                                      Icons.backspace, color: context.watch<ThemeManagement>().allIconColor,
                                     ),
                                   ),
                                 ),

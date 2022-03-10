@@ -1,11 +1,12 @@
 import 'package:finance/ChartScreen/chart_screen.dart';
+import 'package:finance/Providers/ThemeManagement.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'Chart/line_chart.dart';
 import 'MyPageView/my_page_view.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +19,6 @@ class HomeScreen extends StatelessWidget {
           padding: const EdgeInsets.only(right: 12, left: 12),
           child: Container(
             decoration: BoxDecoration(
-              color: Colors.white,
               borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
@@ -30,6 +30,7 @@ class HomeScreen extends StatelessWidget {
               ],
             ),
             child: Material(
+              color: context.watch<ThemeManagement>().containerColors,
               child: InkWell(
                   onTap: () {
                     Navigator.push(
@@ -48,7 +49,7 @@ class HomeScreen extends StatelessWidget {
         const SizedBox(
           height: 12,
         ),
-        const MyPageView(),
+        MyPageView(),
       ],
     );
   }

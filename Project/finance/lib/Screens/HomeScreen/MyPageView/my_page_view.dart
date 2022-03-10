@@ -1,14 +1,17 @@
 import 'package:finance/Entities/category.dart';
 import 'package:finance/EntityServices/categoryService.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 
+import '../../../Providers/LogInManagement.dart';
+import '../../../Providers/ThemeManagement.dart';
+import '../../../Skeletons/PageViewSkeleton.dart';
 import '../../../database.dart';
 import 'incoming.dart';
 import 'outgoing.dart';
 
 class MyPageView extends StatefulWidget {
-  const MyPageView({Key? key}) : super(key: key);
-
   @override
   State<MyPageView> createState() => _MyPageViewState();
 }
@@ -16,6 +19,10 @@ class MyPageView extends StatefulWidget {
 class _MyPageViewState extends State<MyPageView> {
   bool isIncoming = false;
   PageController pageController = PageController();
+
+  refreshCategories() {
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,22 +53,35 @@ class _MyPageViewState extends State<MyPageView> {
                       },
                       child: Container(
                         decoration: BoxDecoration(
+                          color: context.watch<ThemeManagement>().containerColors,
                           border: Border(
                             bottom: BorderSide(
                               color: !isIncoming
-                                  ? const Color(0xff5A6FF0)
-                                  : const Color(0xff5A6FF0).withOpacity(0.1),
+                                  ? context
+                                      .watch<ThemeManagement>()
+                                      .lineChartColorActual
+                                  : context
+                                      .watch<ThemeManagement>()
+                                      .lineChartColorActual
+                                      .withOpacity(0.1),
                             ),
                           ),
                         ),
                         child: Center(
                           child: Padding(
                             padding: const EdgeInsets.symmetric(vertical: 12.0),
-                            child: Text("Expenses",
-                                style: TextStyle(
-                                    color: !isIncoming
-                                        ? Colors.black
-                                        : Colors.black.withOpacity(0.1))),
+                            child: Text(
+                              "Expenses",
+                              style: TextStyle(
+                                color: !isIncoming
+                                    ? context
+                                        .watch<ThemeManagement>()
+                                        .allTextColor
+                                    : context
+                                        .watch<ThemeManagement>()
+                                        .allTextColorOpacity1,
+                              ),
+                            ),
                           ),
                         ),
                       ),
@@ -76,11 +96,17 @@ class _MyPageViewState extends State<MyPageView> {
                       },
                       child: Container(
                         decoration: BoxDecoration(
+                          color: context.watch<ThemeManagement>().containerColors,
                           border: Border(
                             bottom: BorderSide(
                               color: isIncoming
-                                  ? const Color(0xffC31FE6)
-                                  : const Color(0xffC31FE6).withOpacity(0.1),
+                                  ? context
+                                      .watch<ThemeManagement>()
+                                      .lineChartColorPredicted
+                                  : context
+                                      .watch<ThemeManagement>()
+                                      .lineChartColorPredicted
+                                      .withOpacity(0.1),
                             ),
                           ),
                         ),
@@ -91,8 +117,8 @@ class _MyPageViewState extends State<MyPageView> {
                               "Incomes",
                               style: TextStyle(
                                 color: isIncoming
-                                    ? Colors.black
-                                    : Colors.black.withOpacity(0.1),
+                                    ? context.watch<ThemeManagement>().allTextColor
+                                    : context.watch<ThemeManagement>().allTextColorOpacity1,
                               ),
                             ),
                           ),
@@ -103,11 +129,12 @@ class _MyPageViewState extends State<MyPageView> {
                 ],
               ),
               FutureBuilder(
-                  future: CategoryService().fetchCategorys(),
+                  future: CategoryService()
+                      .fetchCategorys(context.read<LogInManagement>().meUser!),
                   builder: (context, AsyncSnapshot snapshot) {
                     if (snapshot.hasData) {
                       List<Category> allCategories = snapshot.data;
-                      return SizedBox(
+                      return Container(
                         height: (80 +
                                     allCategories
                                             .where(
@@ -130,6 +157,7 @@ class _MyPageViewState extends State<MyPageView> {
                                         .where((element) => element.isExpense)
                                         .length *
                                     62),
+                        color: context.watch<ThemeManagement>().containerColors,
                         child: PageView(
                           controller: pageController,
                           onPageChanged: (int i) {
@@ -142,14 +170,31 @@ class _MyPageViewState extends State<MyPageView> {
                             });
                           },
                           children: [
-                            Outgoing(allCategories),
-                            Incoming(allCategories),
+                            Outgoing(allCategories, refreshCategories),
+                            Incoming(allCategories, refreshCategories),
                           ],
                         ),
                       );
                     }
-                    return Center(
-                      child: CircularProgressIndicator(),
+                    return Container(
+                    color: context.watch<ThemeManagement>().containerColors,
+                      height: 460,
+                      child: PageView(
+                        controller: pageController,
+                        onPageChanged: (int i) {
+                          setState(() {
+                            if (i == 0) {
+                              isIncoming = false;
+                            } else {
+                              isIncoming = true;
+                            }
+                          });
+                        },
+                        children: [
+                          PageViewSkeleton(),
+                          PageViewSkeleton(),
+                        ],
+                      ),
                     );
                   })
             ],

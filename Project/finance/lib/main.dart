@@ -1,15 +1,36 @@
 import 'package:finance/EntityServices/userService.dart';
+import 'package:finance/PinCodeScreen/pin_code_screen.dart';
+import 'package:finance/Providers/ThemeManagement.dart';
+import 'package:finance/SignUpScreen.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
-import 'Entities/users.dart';
-import 'EntityServices/categoryService.dart';
-import 'EntityServices/transactionService.dart';
+import 'package:provider/provider.dart';
+import 'EntityServices/AvatarService.dart';
+import 'Providers/LogInManagement.dart';
+import 'SplashScreen.dart';
 import 'database.dart';
+import 'firebase_options.dart';
 import 'main_screen.dart';
 
-void main() {
-  runApp(MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => LogInManagement(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => ThemeManagement(),
+        ),
+      ],
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -19,20 +40,31 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Finance',
       debugShowCheckedModeBanner: false,
+      routes: {
+        'signup': (context) => const SignUpScreen(),
+      },
       home: FutureBuilder(
-        future: UserService().fetchUsers().then((value){
-          return value;
-        }),
+        future: UserService().fetchUsers(1).then(
+          (value) {
+            context
+                .read<ThemeManagement>()
+                .setTheme(value.themePreference != "Light");
+            return value;
+          },
+        ),
         builder: (context, AsyncSnapshot snapshot) {
           if (snapshot.hasData) {
-            meUser = snapshot.data;
-            return MainScreen();
+            context.read<LogInManagement>().meUser = snapshot.data;
+            if (context.read<LogInManagement>().meUser?.pinCode == null) {
+              return MainScreen();
+            } else {
+              return PinCodeScreen(
+                pinCode: context.read<LogInManagement>().meUser?.pinCode,
+                isLogged: false,
+              );
+            }
           }
-          return const Scaffold(
-            body: Center(
-              child: CircularProgressIndicator(),
-            ),
-          );
+          return const SplashScreen();
         },
       ),
     );

@@ -1,4 +1,3 @@
-
 import 'Entities/users.dart';
-String localhost = "192.168.1.68:8000";
-User? meUser;
+
+String localhost = "100.66.31.166:8000";

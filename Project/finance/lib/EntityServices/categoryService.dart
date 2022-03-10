@@ -2,13 +2,14 @@ import 'dart:convert';
 import 'package:finance/Entities/category.dart';
 import 'package:http/http.dart' as http;
 
+import '../Entities/users.dart';
 import '../database.dart';
 
 class CategoryService {
-  Future<List<Category>> fetchCategorys() async {
+  Future<List<Category>> fetchCategorys(User meUser) async {
     final res = await http.get(
       Uri.parse("http://$localhost/categorys/"),
-      headers: <String, String>{'userID': meUser!.id.toString()},
+      headers: <String, String>{'userID': meUser.id.toString()},
     );
 
     if (res.statusCode == 200) {
@@ -25,10 +26,11 @@ class CategoryService {
     required String name,
     required bool isExpense,
     required List<String> words,
+    required User meUser
   }) async {
     Map<String, String> aMap = <String, String>{
       'name': name.toString(),
-      'user': meUser!.id.toString(),
+      'user': meUser.id.toString(),
       'is_expense': isExpense ? "True" : "False",
     };
     for (var element in words) {

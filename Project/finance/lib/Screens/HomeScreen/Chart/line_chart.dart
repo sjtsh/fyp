@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../../../Providers/ThemeManagement.dart';
 import 'my_chart.dart';
 
 class LineChart extends StatelessWidget {
@@ -22,8 +24,8 @@ class LineChart extends StatelessWidget {
                   Container(
                     height: 10,
                     width: 10,
-                    decoration: const BoxDecoration(
-                      color: Color(0xffC31FE6),
+                    decoration: BoxDecoration(
+                      color: context.watch<ThemeManagement>().lineChartColorPredicted,
                       shape: BoxShape.circle,
                     ),
                   ),
@@ -33,7 +35,7 @@ class LineChart extends StatelessWidget {
                   Text(
                     "Predicted",
                     style: TextStyle(
-                      color: Colors.black.withOpacity(0.5),
+                      color: context.watch<ThemeManagement>().allTextColorOpacity5,
                       fontSize: 10,
                     ),
                   ),
@@ -43,8 +45,8 @@ class LineChart extends StatelessWidget {
                   Container(
                     height: 10,
                     width: 10,
-                    decoration: const BoxDecoration(
-                      color: Color(0xff3A57E8),
+                    decoration: BoxDecoration(
+                      color: context.watch<ThemeManagement>().lineChartColorActual,
                       shape: BoxShape.circle,
                     ),
                   ),
@@ -54,7 +56,7 @@ class LineChart extends StatelessWidget {
                   Text(
                     "Actual",
                     style: TextStyle(
-                      color: Colors.black.withOpacity(0.5),
+                      color: context.watch<ThemeManagement>().allTextColorOpacity5,
                       fontSize: 10,
                     ),
                   ),
@@ -64,8 +66,8 @@ class LineChart extends StatelessWidget {
                 ],
               ),
             ),
-            const Expanded(
-              child: BezierChartPersonal(),
+            Expanded(
+              child: Hero(tag: "chart", child: BezierChartPersonal()),
             ),
           ],
         ));

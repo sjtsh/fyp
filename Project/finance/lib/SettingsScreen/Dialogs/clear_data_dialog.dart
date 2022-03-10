@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../../Providers/ThemeManagement.dart';
 
 class ClearDataDialog extends StatelessWidget {
   const ClearDataDialog({Key? key}) : super(key: key);
@@ -12,7 +15,7 @@ class ClearDataDialog extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
         ),
         child: Material(
-          color: const Color(0xffFAFAFA),
+          color: context.watch<ThemeManagement>().background,
           child: Container(
             height: 100,
             width: 250,
@@ -20,9 +23,13 @@ class ClearDataDialog extends StatelessWidget {
               padding: const EdgeInsets.all(12.0),
               child: Column(
                 children: [
-                  const Expanded(
+                   Expanded(
                       child: Center(
-                          child: Text("Are you sure you want to clear Data?"))),
+                          child: Text("Are you sure you want to clear Data?",
+                            style: TextStyle(
+                                color: context
+                                    .watch<ThemeManagement>()
+                                    .allTextColor),))),
                   const SizedBox(
                     width: 12,
                   ),
@@ -37,9 +44,12 @@ class ClearDataDialog extends StatelessWidget {
                             ),
                             child: MaterialButton(
                                 onPressed: () {},
-                                child: const Text(
+                                child: Text(
                                   "Cancel",
-                                  style: TextStyle(color: Colors.white),
+                                  style: TextStyle(
+                                  color: context
+                                      .watch<ThemeManagement>()
+                                      .allTextColorNegative),
                                 )),
                           ),
                         ),
@@ -54,9 +64,12 @@ class ClearDataDialog extends StatelessWidget {
                             ),
                             child: MaterialButton(
                                 onPressed: () {},
-                                child: const Text(
+                                child: Text(
                                   "Confirm",
-                                  style: TextStyle(color: Colors.white),
+                                  style: TextStyle(
+                                      color: context
+                                          .watch<ThemeManagement>()
+                                          .allTextColorNegative),
                                 )),
                           ),
                         ),

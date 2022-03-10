@@ -1,5 +1,8 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../../../Providers/ThemeManagement.dart';
 
 class BezierChartPersonal extends StatefulWidget {
   const BezierChartPersonal({Key? key}) : super(key: key);
@@ -9,7 +12,7 @@ class BezierChartPersonal extends StatefulWidget {
 }
 
 class _BezierChartPersonalState extends State<BezierChartPersonal> {
-  List<int> actualData = [200, 20003, 19000, 30000, 30000, 20003, 20000, 35000];
+  List<int> actualData = [0, 0, 0, 0, 0, 0, 0, 0];
   List<int> predictedData = [
     5000,
     25000,
@@ -20,6 +23,16 @@ class _BezierChartPersonalState extends State<BezierChartPersonal> {
     12000,
     21000
   ];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Future.delayed(const Duration(milliseconds: 0)).then((value) {
+      actualData = [200, 20003, 19000, 30000, 30000, 20003, 20000, 35000];
+      setState(() {});
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,8 +61,10 @@ class _BezierChartPersonalState extends State<BezierChartPersonal> {
                 gradientFrom: const Offset(0, 1),
                 gradientTo: const Offset(0.5, 0),
                 colors: [
-                  Colors.white,
-                  const Color(0xffC31FE6).withOpacity(0.5),
+                  context.watch<ThemeManagement>().containerColors,
+                  context
+                      .watch<ThemeManagement>()
+                      .lineChartColorPredictedOpacity5,
                 ],
               ),
               dotData: FlDotData(
@@ -57,7 +72,6 @@ class _BezierChartPersonalState extends State<BezierChartPersonal> {
               ),
             ),
             LineChartBarData(
-
               spots: actualData
                   .asMap()
                   .entries
@@ -75,8 +89,8 @@ class _BezierChartPersonalState extends State<BezierChartPersonal> {
                 gradientFrom: const Offset(0, 1),
                 gradientTo: const Offset(0, 0),
                 colors: [
-                  Colors.white,
-                  const Color(0xff3A57E8).withOpacity(0.7),
+                  context.watch<ThemeManagement>().containerColors,
+                  context.watch<ThemeManagement>().lineChartColorActualOpacity7,
                 ],
               ),
               dotData: FlDotData(
@@ -106,8 +120,8 @@ class _BezierChartPersonalState extends State<BezierChartPersonal> {
             show: false,
           ),
         ),
-        swapAnimationDuration: const Duration(milliseconds: 500), // Optional
-        swapAnimationCurve: Curves.easeIn,
+        swapAnimationDuration: const Duration(milliseconds: 400),
+        swapAnimationCurve: Curves.ease,
       ),
     );
   }

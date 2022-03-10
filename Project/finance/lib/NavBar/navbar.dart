@@ -1,5 +1,8 @@
 import 'package:custom_navigation_bar/custom_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../Providers/ThemeManagement.dart';
 
 class NavBar extends StatefulWidget {
   final boxShadow = [
@@ -21,19 +24,21 @@ class _NavBarState extends State<NavBar> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(boxShadow: [
-        BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 3,
-            offset: const Offset(0, -2))
-      ]),
+      decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 3,
+              offset: const Offset(0, -2))
+        ],
+      ),
       child: CustomNavigationBar(
         strokeColor: Colors.blue.withOpacity(0.5),
         iconSize: 25,
         currentIndex: widget.currentIndex,
         selectedColor: Colors.black,
-        unSelectedColor: Colors.black.withOpacity(0.5),
-        backgroundColor: Colors.white,
+        unSelectedColor: context.watch<ThemeManagement>().allTextColorOpacity5,
+        backgroundColor:context.watch<ThemeManagement>().containerColors,
         opacity: 1,
         onTap: (int i) {
           widget._setIndex(i);
@@ -44,14 +49,14 @@ class _NavBarState extends State<NavBar> {
               Icons.view_carousel_sharp,
               color: widget.currentIndex == 0
                   ? Colors.blue
-                  : Colors.black.withOpacity(0.5),
+                  : context.watch<ThemeManagement>().allIconColorOpacity5,
             ),
             title: Text(
               "Dashboard",
               style: TextStyle(
                   color: widget.currentIndex == 0
                       ? Colors.blue
-                      : Colors.black.withOpacity(0.5),
+                      : context.watch<ThemeManagement>().allTextColorOpacity5,
                   fontSize: 10),
             ),
           ),
@@ -60,14 +65,14 @@ class _NavBarState extends State<NavBar> {
               Icons.attach_money_outlined,
               color: widget.currentIndex == 1
                   ? Colors.blue
-                  : Colors.black.withOpacity(0.5),
+                  : context.watch<ThemeManagement>().allIconColorOpacity5,
             ),
             title: Text(
               "Home",
               style: TextStyle(
                   color: widget.currentIndex == 1
                       ? Colors.blue
-                      : Colors.black.withOpacity(0.5),
+                      : context.watch<ThemeManagement>().allTextColorOpacity5,
                   fontSize: 10),
             ),
           ),
@@ -76,14 +81,14 @@ class _NavBarState extends State<NavBar> {
               Icons.money_outlined,
               color: widget.currentIndex == 2
                   ? Colors.blue
-                  : Colors.black.withOpacity(0.5),
+                  : context.watch<ThemeManagement>().allIconColorOpacity5,
             ),
             title: Text(
               "Transactions",
               style: TextStyle(
                   color: widget.currentIndex == 2
                       ? Colors.blue
-                      : Colors.black.withOpacity(0.5),
+                      : context.watch<ThemeManagement>().allTextColorOpacity5,
                   fontSize: 10),
             ),
           ),
