@@ -1,8 +1,14 @@
 import 'dart:ui';
 
+import 'package:finance/EntityServices/TokenService.dart';
+import 'package:finance/Providers/LogInManagement.dart';
 import 'package:finance/Providers/ThemeManagement.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../PinCodeScreen/pin_code_screen.dart';
+import '../main_screen.dart';
+import 'SignUpDetailsScreen.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);
@@ -17,6 +23,33 @@ class _SignUpScreenState extends State<SignUpScreen> {
     [-45, -15],
     [100, -40],
   ];
+
+  initAll(BuildContext context) {
+    context.read<ThemeManagement>().setTheme(
+        context.read<LogInManagement>().meUser?.themePreference != "Light");
+    if (context.read<LogInManagement>().meUser?.pinCode == null) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) {
+            return MainScreen();
+          },
+        ),
+      );
+    } else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) {
+            return PinCodeScreen(
+              pinCode: context.read<LogInManagement>().meUser?.pinCode,
+              isLogged: false,
+            );
+          },
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,54 +119,72 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     height: 20,
                   ),
                   Expanded(
-                    child: Container(
-                      decoration: BoxDecoration(
-                          color:
-                              context.watch<ThemeManagement>().containerColors,
-                          borderRadius: BorderRadius.circular(12),
-                          boxShadow: [
-                            BoxShadow(
-                                color: Colors.black.withOpacity(0.1),
-                                spreadRadius: 3,
-                                offset: Offset(2, 0),
-                                blurRadius: 3),
-                          ]),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            "Sign in with google",
-                            style: TextStyle(
-                              color:
-                                  context.watch<ThemeManagement>().allTextColor,
-                              fontSize: 20,
+                    child: GestureDetector(
+                      onTap: () async {
+
+                        bool isAvailable =
+                            await TokenService().isAvailable(context);
+                        if (isAvailable) {
+                          initAll(context);
+                        }else {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) {
+                                return SignUpDetailsScreen();
+                              },
                             ),
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Container(
-                                height: 100,
-                                width: 100,
-                                decoration: BoxDecoration(
-                                  color: Colors.green,
-                                  shape: BoxShape.circle,
-                                ),
-                                child: IconButton(
-                                  onPressed: () {},
-                                  icon: Icon(
+                          );
+                        }
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                            color: context
+                                .watch<ThemeManagement>()
+                                .containerColors,
+                            borderRadius: BorderRadius.circular(12),
+                            boxShadow: [
+                              BoxShadow(
+                                  color: Colors.black.withOpacity(0.1),
+                                  spreadRadius: 3,
+                                  offset: Offset(2, 0),
+                                  blurRadius: 3),
+                            ]),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Sign in with google",
+                              style: TextStyle(
+                                color: context
+                                    .watch<ThemeManagement>()
+                                    .allTextColor,
+                                fontSize: 20,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
+                                  height: 100,
+                                  width: 100,
+                                  decoration: BoxDecoration(
+                                    color: Colors.green,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Icon(
                                     Icons.arrow_forward_rounded,
                                     color: Colors.white,
                                     size: 60,
                                   ),
-                                ),
-                              )
-                            ],
-                          )
-                        ],
+                                )
+                              ],
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -170,84 +221,90 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     height: 12,
                   ),
                   Expanded(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: context.watch<ThemeManagement>().containerColors,
-                        borderRadius: BorderRadius.circular(12),
-                        boxShadow: [
-                          BoxShadow(
-                              color: Colors.black.withOpacity(0.1),
-                              spreadRadius: 3,
-                              offset: Offset(2, 0),
-                              blurRadius: 3),
-                        ],
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                "Try our ",
-                                style: TextStyle(
-                                  color: context
-                                      .watch<ThemeManagement>()
-                                      .allTextColor,
-                                  fontSize: 20,
+                    child: GestureDetector(
+                      onTap: () async {
+                        bool creds =
+                            await TokenService().ananymousLogIn(context);
+                            print(creds);
+                        if (creds) {
+                          initAll(context);
+                        }
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color:
+                              context.watch<ThemeManagement>().containerColors,
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: [
+                            BoxShadow(
+                                color: Colors.black.withOpacity(0.1),
+                                spreadRadius: 3,
+                                offset: Offset(2, 0),
+                                blurRadius: 3),
+                          ],
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "Try our ",
+                                  style: TextStyle(
+                                    color: context
+                                        .watch<ThemeManagement>()
+                                        .allTextColor,
+                                    fontSize: 20,
+                                  ),
                                 ),
-                              ),
-                              Text(
-                                "anonymous",
-                                style: TextStyle(
-                                  color: context
-                                      .watch<ThemeManagement>()
-                                      .allTextColorOpacity5,
-                                  fontSize: 20,
+                                Text(
+                                  "anonymous",
+                                  style: TextStyle(
+                                    color: context
+                                        .watch<ThemeManagement>()
+                                        .allTextColorOpacity5,
+                                    fontSize: 20,
+                                  ),
                                 ),
-                              ),
-                              Text(
-                                " sign up",
-                                style: TextStyle(
-                                  color: context
-                                      .watch<ThemeManagement>()
-                                      .allTextColor,
-                                  fontSize: 20,
+                                Text(
+                                  " sign up",
+                                  style: TextStyle(
+                                    color: context
+                                        .watch<ThemeManagement>()
+                                        .allTextColor,
+                                    fontSize: 20,
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Container(
-                                height: 100,
-                                width: 100,
-                                decoration: BoxDecoration(
-                                  color: context
-                                      .watch<ThemeManagement>()
-                                      .background,
-                                  shape: BoxShape.circle,
-                                ),
-                                child: IconButton(
-                                  onPressed: () {
-
-                                  },
-                                  icon: Icon(
+                              ],
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
+                                  height: 100,
+                                  width: 100,
+                                  decoration: BoxDecoration(
+                                    color: context
+                                        .watch<ThemeManagement>()
+                                        .background,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Icon(
                                     Icons.arrow_forward_rounded,
                                     color: context
                                         .watch<ThemeManagement>()
                                         .allIconColor,
                                     size: 60,
                                   ),
-                                ),
-                              )
-                            ],
-                          )
-                        ],
+                                )
+                              ],
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ),

@@ -43,6 +43,8 @@ dependencies:
   firebase_auth:
   countup:
   provider:
+  im_stepper: ^0.1.3
+  lottie:
 
 
   # The following adds the Cupertino Icons font to your application.

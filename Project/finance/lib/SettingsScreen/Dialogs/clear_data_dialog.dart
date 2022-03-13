@@ -1,3 +1,6 @@
+import 'package:finance/EntityServices/userService.dart';
+import 'package:finance/Providers/LogInManagement.dart';
+import 'package:finance/SignUpScreen/SignUpScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -23,13 +26,13 @@ class ClearDataDialog extends StatelessWidget {
               padding: const EdgeInsets.all(12.0),
               child: Column(
                 children: [
-                   Expanded(
+                  Expanded(
                       child: Center(
-                          child: Text("Are you sure you want to clear Data?",
-                            style: TextStyle(
-                                color: context
-                                    .watch<ThemeManagement>()
-                                    .allTextColor),))),
+                          child: Text(
+                    "Are you sure you want to delete account?",
+                    style: TextStyle(
+                        color: context.watch<ThemeManagement>().allTextColor),
+                  ))),
                   const SizedBox(
                     width: 12,
                   ),
@@ -43,13 +46,12 @@ class ClearDataDialog extends StatelessWidget {
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: MaterialButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
                                 child: Text(
                                   "Cancel",
-                                  style: TextStyle(
-                                  color: context
-                                      .watch<ThemeManagement>()
-                                      .allTextColorNegative),
+                                  style: TextStyle(color: Colors.white),
                                 )),
                           ),
                         ),
@@ -63,13 +65,25 @@ class ClearDataDialog extends StatelessWidget {
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: MaterialButton(
-                                onPressed: () {},
+                                onPressed: () async {
+                                  if (context.read<LogInManagement>().meUser !=
+                                      null) {
+                                    bool success = await UserService()
+                                        .deleteUser(context
+                                            .read<LogInManagement>()
+                                            .meUser!
+                                            .id);
+                                    if (success) {
+                                      Navigator.push(context,
+                                          MaterialPageRoute(builder: (_) {
+                                        return SignUpScreen();
+                                      }));
+                                    }
+                                  }
+                                },
                                 child: Text(
                                   "Confirm",
-                                  style: TextStyle(
-                                      color: context
-                                          .watch<ThemeManagement>()
-                                          .allTextColorNegative),
+                                  style: TextStyle(color: Colors.white),
                                 )),
                           ),
                         ),

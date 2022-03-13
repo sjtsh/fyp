@@ -17,7 +17,16 @@ class UserService {
     }
   }
 
-  // Future<User> fetchUserWithGoogle()
+  Future<bool> deleteUser(int userID) async {
+    final res = await http.delete(
+      Uri.parse("http://$localhost/user/$userID/delete"),
+    );
+    if (res.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
   Future<User> changeThemePreference(
       {required String themePreference, required User meUser}) async {

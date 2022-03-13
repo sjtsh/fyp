@@ -1,14 +1,6 @@
-#easy
-    dynamic line graph and radar graph
-    sort transactions by for month, year, day
-
-#must
-
 #hard
-    google sign in support non mandatory, anonymous user id
     dark theme, new UI, Animations, logo and splash screen
     comments and tooltip for hearing aids
-    avatar choices when sign up, emoji to be dynamic
     clear data and deactivate functionality
     donate button to donate through e-sewa
     update and delete functionalities for categories and transaction

@@ -30,13 +30,6 @@ class _AddTransactionState extends State<AddTransaction> {
   bool isAmountEmpty = false;
 
   @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    dropDownValue = widget.categories[0];
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: context.watch<ThemeManagement>().background,
@@ -354,7 +347,7 @@ class _AddTransactionState extends State<AddTransaction> {
                   amountController.text == ""
                       ? setState(() => isAmountEmpty = true)
                       : setState(() => isAmountEmpty = false);
-                  if (!isRemarkEmpty && !isAmountEmpty) {
+                  if (!isRemarkEmpty && !isAmountEmpty && dropDownValue!=null) {
                     setState(() {
                       isDisabled = true;
                     });

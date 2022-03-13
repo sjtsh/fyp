@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 
 import '../Providers/LogInManagement.dart';
 import '../Providers/ThemeManagement.dart';
-import '../SignUpScreen.dart';
+import '../SignUpScreen/SignUpScreen.dart';
 import '../database.dart';
 import '../methods.dart';
 import 'Dialogs/AvatarDialog.dart';
@@ -407,7 +407,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                       ),
                                       child: Row(
                                         children: [
-                                          const Text("Remove Passcode: "),
+                                          Text(
+                                            "Remove Passcode: ",
+                                            style: TextStyle(
+                                                color: context
+                                                    .watch<ThemeManagement>()
+                                                    .allTextColor),
+                                          ),
                                           Expanded(child: Container()),
                                           Container(
                                             width: 120,
@@ -448,6 +454,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                                 child: Center(
                                                   child: Text(
                                                     "Remove",
+                                                    style: TextStyle(
+                                                        color: context
+                                                            .watch<
+                                                                ThemeManagement>()
+                                                            .allTextColor),
                                                   ),
                                                 ),
                                               ),
@@ -464,7 +475,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 child: Row(
                                   children: [
                                     Text(
-                                      "Clear Data: ",
+                                      "Delete Account: ",
                                       style: TextStyle(
                                           color: context
                                               .watch<ThemeManagement>()
@@ -618,60 +629,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   ],
                                 ),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 12.0,
-                                  vertical: 6,
-                                ),
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      "Deactivate Account: ",
-                                      style: TextStyle(
-                                          color: context
-                                              .watch<ThemeManagement>()
-                                              .allTextColor),
-                                    ),
-                                    Expanded(child: Container()),
-                                    Container(
-                                      width: 120,
-                                      height: 40,
-                                      clipBehavior: Clip.hardEdge,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(12),
-                                        border: Border.all(
-                                            color: context
-                                                .watch<ThemeManagement>()
-                                                .allTextColorOpacity5),
-                                      ),
-                                      child: Material(
-                                        color: context
-                                            .watch<ThemeManagement>()
-                                            .transaparentTextButtonColorOpacity05,
-                                        borderRadius: BorderRadius.circular(12),
-                                        child: InkWell(
-                                          onTap: () {
-                                            showDialog(
-                                                context: context,
-                                                builder: (_) {
-                                                  return const DeactivateAccountDialog();
-                                                });
-                                          },
-                                          child: Center(
-                                            child: Text(
-                                              "Deactivate",
-                                              style: TextStyle(
-                                                  color: context
-                                                      .watch<ThemeManagement>()
-                                                      .allTextColor),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
                               context.watch<LogInManagement>().meUser?.email ==
                                       null
                                   ? Padding(
@@ -715,39 +672,37 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                         ),
                                       ),
                                     )
-                                  : Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 12.0,
-                                        vertical: 12,
-                                      ),
-                                      child: Container(
-                                        clipBehavior: Clip.hardEdge,
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(12),
-                                        ),
-                                        child: MaterialButton(
-                                          height: 40,
-                                          minWidth:
-                                              MediaQuery.of(context).size.width,
-                                          color: Colors.red,
-                                          onPressed: () {
-                                            // Navigator.push(context,
-                                            //     MaterialPageRoute(builder: (_) {
-                                            //   return SignUpScreen();
-                                            // }));
-                                            Navigator.pushNamed(
-                                                context, "signup");
-                                          },
-                                          child: const Text(
-                                            "Log Out",
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                        ),
+                                  : Container(),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12.0,
+                                  vertical: 12,
+                                ),
+                                child: Container(
+                                  clipBehavior: Clip.hardEdge,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: MaterialButton(
+                                    height: 40,
+                                    minWidth: MediaQuery.of(context).size.width,
+                                    color: Colors.red,
+                                    onPressed: () {
+                                      // Navigator.push(context,
+                                      //     MaterialPageRoute(builder: (_) {
+                                      //   return SignUpScreen();
+                                      // }));
+                                      Navigator.pushNamed(context, "signup");
+                                    },
+                                    child: const Text(
+                                      "Log Out",
+                                      style: TextStyle(
+                                        color: Colors.white,
                                       ),
                                     ),
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
                         ),

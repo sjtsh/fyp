@@ -282,7 +282,7 @@ class _PinCodeScreenState extends State<PinCodeScreen> {
                                   width: 80,
                                   child: Center(
                                     child: Icon(
-                                      Icons.delete, color: context.watch<ThemeManagement>().allIconColor,
+                                      Icons.delete,
                                     ),
                                   ),
                                 ),
@@ -319,9 +319,6 @@ class _PinCodeScreenState extends State<PinCodeScreen> {
                                         "0",
                                         style: TextStyle(
                                           fontSize: 30,
-                                          color: context
-                                              .watch<ThemeManagement>()
-                                              .allTextColor,
                                         ),
                                       ),
                                     ),
@@ -359,7 +356,7 @@ class _PinCodeScreenState extends State<PinCodeScreen> {
                                   width: 80,
                                   child: Center(
                                     child: Icon(
-                                      Icons.backspace, color: context.watch<ThemeManagement>().allIconColor,
+                                      Icons.backspace,
                                     ),
                                   ),
                                 ),
