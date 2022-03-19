@@ -1,7 +1,10 @@
+import 'package:finance/Providers/AnalysisManagement.dart';
+import 'package:finance/Providers/LogInManagement.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../EntityServices/RegessionService.dart';
 import '../../../Providers/ThemeManagement.dart';
 
 class BezierChartPersonal extends StatefulWidget {
@@ -28,8 +31,24 @@ class _BezierChartPersonalState extends State<BezierChartPersonal> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    Future.delayed(const Duration(milliseconds: 0)).then((value) {
-      actualData = [200, 20003, 19000, 30000, 30000, 20003, 20000, 35000];
+    RegressionService()
+        .fetchLinearModels(context
+        .read<LogInManagement>()
+        .meUser!
+        .id, context)
+        .then((value) {
+      actualData = context
+          .read<AnalysisManagement>()
+          .actualData15
+          .entries
+          .map((e) => e.value).toList();
+      setState(() {});
+
+      predictedData = context
+          .read<AnalysisManagement>()
+          .predictedData15
+          .entries
+          .map((e) => e.value).toList();
       setState(() {});
     });
   }
@@ -48,7 +67,7 @@ class _BezierChartPersonalState extends State<BezierChartPersonal> {
                   .asMap()
                   .entries
                   .map((content) =>
-                      FlSpot(content.key + 1.0, content.value + 0.0))
+                  FlSpot(content.key + 1.0, content.value + 0.0))
                   .toList(),
               isCurved: true,
               colors: [
@@ -61,7 +80,9 @@ class _BezierChartPersonalState extends State<BezierChartPersonal> {
                 gradientFrom: const Offset(0, 1),
                 gradientTo: const Offset(0.5, 0),
                 colors: [
-                  context.watch<ThemeManagement>().containerColors,
+                  context
+                      .watch<ThemeManagement>()
+                      .containerColors,
                   context
                       .watch<ThemeManagement>()
                       .lineChartColorPredictedOpacity5,
@@ -76,7 +97,7 @@ class _BezierChartPersonalState extends State<BezierChartPersonal> {
                   .asMap()
                   .entries
                   .map((content) =>
-                      FlSpot(content.key + 1.0, content.value + 0.0))
+                  FlSpot(content.key + 1.0, content.value + 0.0))
                   .toList(),
               isCurved: true,
               colors: [
@@ -89,8 +110,12 @@ class _BezierChartPersonalState extends State<BezierChartPersonal> {
                 gradientFrom: const Offset(0, 1),
                 gradientTo: const Offset(0, 0),
                 colors: [
-                  context.watch<ThemeManagement>().containerColors,
-                  context.watch<ThemeManagement>().lineChartColorActualOpacity7,
+                  context
+                      .watch<ThemeManagement>()
+                      .containerColors,
+                  context
+                      .watch<ThemeManagement>()
+                      .lineChartColorActualOpacity7,
                 ],
               ),
               dotData: FlDotData(

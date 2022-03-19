@@ -1,0 +1,9 @@
+
+pip install djangorestframework
+pip install django-cors-headers
+pip install mysql.connector
+
+from financebackend.models import *
+Category.objects.create(name ="hi")
+Category.objects.all()
+Gender.objects.get(id=1)

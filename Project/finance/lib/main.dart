@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'EntityServices/AvatarService.dart';
+import 'Providers/AnalysisManagement.dart';
 import 'Providers/LogInManagement.dart';
 import 'Providers/SignUpManagement.dart';
 import 'SplashScreen.dart';
@@ -31,6 +32,9 @@ void main() async {
         ),
         ChangeNotifierProvider(
           create: (_) => SignUpManagement(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => AnalysisManagement(),
         ),
       ],
       child: MyApp(),

@@ -1,0 +1,10 @@
+an app that will track your expenses in order to provide you where the expenses will go next. It will keep track of your expenses on the offline mode whilst giving you the reports and analytics necessary to keep up. You will calculate your savings your salary the tax. It will categorize whether your expense was related to entertainment food friends lending or bunch of other categories so you can sort it. you can edit the data that it has gathered for you in which way it will learn your personal preferences. It can give you informations of the expenses that you should cut up depending on your expenses from passt months and will suit up your personal preferences.IK
+
+___________________________________________________________________________
+Android application in order to track your salary and expenses and calculate taxes and savings provide you with detailed analytics, predicts your future costs. It can recommend you where to cut your expenses analyzing on your past expenses and also automatically categorize expenses written in natural words in definitive categories unless overwritten which would train the model in real time suiting up to your personal preferences.
+
+it can detect whose birthday was last year and based on that it can predict that they will spend just as much this year or based on their preference
+
+___________________________________________________________________________
+
+Game delivery system based on hilife
