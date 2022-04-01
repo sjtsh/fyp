@@ -21,6 +21,7 @@ class LineChart extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
+
                   Container(
                     height: 10,
                     width: 10,
@@ -33,7 +34,7 @@ class LineChart extends StatelessWidget {
                     width: 6,
                   ),
                   Text(
-                    "Predicted",
+                    "Last Month",
                     style: TextStyle(
                       color: context.watch<ThemeManagement>().allTextColorOpacity5,
                       fontSize: 10,
@@ -54,7 +55,28 @@ class LineChart extends StatelessWidget {
                     width: 6,
                   ),
                   Text(
-                    "Actual",
+                    "This Month",
+                    style: TextStyle(
+                      color: context.watch<ThemeManagement>().allTextColorOpacity5,
+                      fontSize: 10,
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 6,
+                  ),
+                  Container(
+                    height: 10,
+                    width: 10,
+                    decoration: BoxDecoration(
+                      color: context.watch<ThemeManagement>().allTextColor,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 6,
+                  ),
+                  Text(
+                    "Predicted",
                     style: TextStyle(
                       color: context.watch<ThemeManagement>().allTextColorOpacity5,
                       fontSize: 10,

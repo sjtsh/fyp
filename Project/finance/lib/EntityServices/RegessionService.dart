@@ -15,9 +15,22 @@ class RegressionService {
     );
     if (res.statusCode == 200) {
       Map<String, dynamic> values = jsonDecode(res.body);
-      context.read<AnalysisManagement>().actualData15 = values["actual"];
-      context.read<AnalysisManagement>().predictedData15 = values["predicted"];
-      context.read<AnalysisManagement>().lastMonthData30 = values["last_month"];
+      Map<String, dynamic> actualValue = values["actual"];
+      actualValue.forEach((key, value) =>
+          context.read<AnalysisManagement>().actualData15[key] = value + 0.0);
+
+      Map<String, dynamic> predictedValue = values["predicted"];
+      predictedValue.forEach((key, value) =>
+          context.read<AnalysisManagement>().predictedData15[key] = value + 0.0);
+
+      Map<String, dynamic> lastValue = values["last_month"];
+      lastValue.forEach((key, value) =>
+          context.read<AnalysisManagement>().lastMonthData30[key] = value + 0.0);
+
+      await http.get(
+        Uri.parse("http://$localhost/linearmodel/$userID/train"),
+      );
+
       return true;
     } else {
       throw Exception("unsuccessful");

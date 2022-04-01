@@ -15,41 +15,72 @@ class BezierChartPersonal extends StatefulWidget {
 }
 
 class _BezierChartPersonalState extends State<BezierChartPersonal> {
-  List<int> actualData = [0, 0, 0, 0, 0, 0, 0, 0];
-  List<int> predictedData = [
-    5000,
-    25000,
-    17000,
-    40000,
-    40000,
-    17000,
-    12000,
-    21000
-  ];
-
+  List<double> actualData = [1, 2, 3, 4, 5, 6];
+  List<double> predictedData = [6, 5, 4, 3, 2, 1];
+  List<double> lastMonth = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+  double interval = 1000;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    RegressionService()
-        .fetchLinearModels(context
-        .read<LogInManagement>()
-        .meUser!
-        .id, context)
-        .then((value) {
-      actualData = context
-          .read<AnalysisManagement>()
-          .actualData15
-          .entries
-          .map((e) => e.value).toList();
-      setState(() {});
 
-      predictedData = context
-          .read<AnalysisManagement>()
-          .predictedData15
-          .entries
-          .map((e) => e.value).toList();
-      setState(() {});
+    actualData = [1, 2, 3, 4, 5, 6];
+    predictedData = [6, 5, 4, 3, 2, 1];
+    lastMonth = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
+    setState(() {});
+    RegressionService()
+        .fetchLinearModels(context.read<LogInManagement>().meUser!.id, context)
+        .then((value) {
+      if (mounted) {
+        actualData = [
+          ...context
+              .read<AnalysisManagement>()
+              .actualData15
+              .entries
+              .map((e) => e.value)
+              .toList(),
+        ];
+        setState(() {});
+
+        predictedData = [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          context
+              .read<AnalysisManagement>()
+              .actualData15
+              .entries
+              .map((e) => e.value).last,
+          ...context
+              .read<AnalysisManagement>()
+              .predictedData15
+              .entries
+              .map((e) => e.value)
+              .toList(),
+        ];
+        setState(() {});
+
+        lastMonth = [
+          ...context
+              .read<AnalysisManagement>()
+              .lastMonthData30
+              .entries
+              .map((e) => e.value)
+              .toList(),
+        ];
+        setState(() {});
+      }
     });
   }
 
@@ -62,60 +93,106 @@ class _BezierChartPersonalState extends State<BezierChartPersonal> {
           lineTouchData: LineTouchData(enabled: false),
           lineBarsData: [
             LineChartBarData(
-              barWidth: 50,
+              show: true,
               spots: predictedData
                   .asMap()
                   .entries
                   .map((content) =>
-                  FlSpot(content.key + 1.0, content.value + 0.0))
+                  FlSpot(content.key + 1.0, content.value + 10000.0))
                   .toList(),
-              isCurved: true,
+              dashArray: [5],
+              isCurved: false,
               colors: [
-                Colors.transparent
+                Colors.transparent,
+                Colors.transparent,
+                context.watch<ThemeManagement>().isDark ? Colors.white: Colors.black,
+                context.watch<ThemeManagement>().isDark ? Colors.white: Colors.black,
+              ],
+              colorStops: [0, 0.48, 0.48, 1],
+              belowBarData: BarAreaData(
+                show: true,
+                gradientFrom: const Offset(0, 0.5, ),
+                gradientTo: const Offset(1, 0.5, ),
+                colors: [
+                  Colors.transparent,
+                  Colors.transparent,
+
+                   context.watch<ThemeManagement>().isDark ? Colors.white.withOpacity(0.1): Colors.black.withOpacity(0.1),
+                  context.watch<ThemeManagement>().isDark ? Colors.white.withOpacity(0.1): Colors.black.withOpacity(0.1),
+                ],
+                // applyCutOffY: true,
+                // cutOffY: 0.6,
+                gradientColorStops: [0, 0.48, 0.48, 1],
+              ),
+              dotData: FlDotData(
+                show: false,
+              ),
+
+            ),
+            LineChartBarData(
+              show: true,
+              barWidth: 1,
+              spots: actualData
+                  .asMap()
+                  .entries
+                  .map((content) =>
+                  FlSpot(content.key + 1.0, content.value + 10000.0))
+                  .toList(),
+              isCurved: false,
+              colors: [
+                context.watch<ThemeManagement>().lineChartColorActualOpacity7.withOpacity(0.3),
+                context.watch<ThemeManagement>().lineChartColorActualOpacity7.withOpacity(0.3),
+                Colors.transparent,
+                Colors.transparent,
                 // const Color(0xff5A6FF0),
                 // const Color(0xffC31FE6),
               ],
               belowBarData: BarAreaData(
                 show: true,
-                gradientFrom: const Offset(0, 1),
-                gradientTo: const Offset(0.5, 0),
+                gradientFrom: const Offset(0, 0.5, ),
+                gradientTo: const Offset(1, 0.5, ),
                 colors: [
-                  context
-                      .watch<ThemeManagement>()
-                      .containerColors,
-                  context
-                      .watch<ThemeManagement>()
-                      .lineChartColorPredictedOpacity5,
+                  context.watch<ThemeManagement>().lineChartColorActualOpacity7,
+                  context.watch<ThemeManagement>().lineChartColorActualOpacity7,
+                  Colors.transparent,
+                  Colors.transparent,
                 ],
+                // applyCutOffY: true,
+                // cutOffY: 0.6,
+                gradientColorStops: [0, 0.65, 0.65, 1],
               ),
+              colorStops: [0, 0.65, 0.65, 1],
               dotData: FlDotData(
                 show: false,
               ),
             ),
             LineChartBarData(
-              spots: actualData
+              show: true,
+              barWidth: 1,
+              spots: lastMonth
                   .asMap()
                   .entries
                   .map((content) =>
-                  FlSpot(content.key + 1.0, content.value + 0.0))
+                  FlSpot(content.key + 1.0, content.value + 10000.0))
                   .toList(),
-              isCurved: true,
+              isCurved: false,
               colors: [
-                Colors.transparent
+                // Colors.transparent
+                context
+                    .watch<ThemeManagement>()
+                    .lineChartColorPredicted.withOpacity(0.5)
                 // const Color(0xff5A6FF0),
                 // const Color(0xffC31FE6),
               ],
               belowBarData: BarAreaData(
-                show: true,
+                show: false,
                 gradientFrom: const Offset(0, 1),
                 gradientTo: const Offset(0, 0),
                 colors: [
+                  Colors.transparent,
                   context
                       .watch<ThemeManagement>()
-                      .containerColors,
-                  context
-                      .watch<ThemeManagement>()
-                      .lineChartColorActualOpacity7,
+                      .lineChartColorPredictedOpacity5,
                 ],
               ),
               dotData: FlDotData(
@@ -145,6 +222,7 @@ class _BezierChartPersonalState extends State<BezierChartPersonal> {
             show: false,
           ),
         ),
+
         swapAnimationDuration: const Duration(milliseconds: 400),
         swapAnimationCurve: Curves.ease,
       ),

@@ -20,8 +20,10 @@ class TokenService {
     if (res.statusCode == 200) {
       us.User user = us.User.fromJson(jsonDecode(res.body));
       context.read<LogInManagement>().meUser = user;
-      print(user.id);
       context.read<LogInManagement>().userChange();
+      await http.get(
+        Uri.parse("http://$localhost/linearmodel/${user.id}/train"),
+      );
       return true;
     } else {
       return false;
@@ -54,6 +56,9 @@ class TokenService {
         } else {
           us.User user = us.User.fromJson(jsonDecode(res.body));
           context.read<LogInManagement>().meUser = user;
+          await http.get(
+            Uri.parse("http://$localhost/linearmodel/${user.id}/train"),
+          );
           return true;
         }
       } else {
@@ -92,6 +97,9 @@ class TokenService {
       us.User user = us.User.fromJson(jsonDecode(res.body));
       context.read<LogInManagement>().meUser = user;
       context.read<LogInManagement>().userChange();
+      await http.get(
+        Uri.parse("http://$localhost/linearmodel/${user.id}/train"),
+      );
       return true;
     } else {
       return false;
@@ -129,7 +137,9 @@ class TokenService {
           us.User user = us.User.fromJson(jsonDecode(res.body));
           context.read<LogInManagement>().meUser = user;
           context.read<LogInManagement>().userChange();
-          print(user.id);
+          await http.get(
+            Uri.parse("http://$localhost/linearmodel/${user.id}/train"),
+          );
           return true;
         } else {
           return false;

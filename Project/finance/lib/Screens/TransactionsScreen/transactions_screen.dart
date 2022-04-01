@@ -1,4 +1,5 @@
 import 'package:finance/Entities/transaction.dart';
+import 'package:finance/EntityServices/RelatedWordService.dart';
 import 'package:finance/EntityServices/categoryService.dart';
 import 'package:finance/EntityServices/transactionService.dart';
 import 'package:finance/database.dart';
@@ -61,7 +62,8 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                       });
                     },
                     value: dropDownValue,
-                    dropdownColor: context.watch<ThemeManagement>().containerColors,
+                    dropdownColor:
+                        context.watch<ThemeManagement>().containerColors,
                     elevation: 0,
                     underline: Container(),
                     items: ["All", "Month", "Year", "Day"]
@@ -91,14 +93,18 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                       isDisabled = true;
                     });
                     CategoryService()
-                        .fetchCategorys(
-                            context.read<LogInManagement>().meUser!)
+                        .fetchCategorys(context.read<LogInManagement>().meUser!)
                         .then((value) {
-                      Navigator.push(context, MaterialPageRoute(builder: (_) {
-                        return AddTransaction(value, refreshTransaction);
-                      }));
-                      setState(() {
-                        isDisabled = false;
+                      RelatedWordService()
+                          .fetchRelatedWords(
+                              context.read<LogInManagement>().meUser!)
+                          .then((relatedWords) {
+                        Navigator.push(context, MaterialPageRoute(builder: (_) {
+                          return AddTransaction(value, relatedWords, refreshTransaction);
+                        }));
+                        setState(() {
+                          isDisabled = false;
+                        });
                       });
                     });
                   }

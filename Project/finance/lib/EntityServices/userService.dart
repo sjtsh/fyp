@@ -11,6 +11,9 @@ class UserService {
     if (res.statusCode == 200) {
       dynamic value = jsonDecode(res.body);
       User user = User.fromJson(value);
+      await http.get(
+        Uri.parse("http://$localhost/linearmodel/${user.id}/train"),
+      );
       return user;
     } else {
       throw Exception("unsuccessful");

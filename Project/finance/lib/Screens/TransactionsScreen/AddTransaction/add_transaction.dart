@@ -1,4 +1,5 @@
 import 'package:finance/Entities/category.dart';
+import 'package:finance/Entities/related_word.dart';
 import 'package:finance/EntityServices/transactionService.dart';
 import 'package:finance/Screens/CategoryScreen/AddCategory/add_category.dart';
 import 'package:finance/database.dart';
@@ -11,11 +12,11 @@ import '../../../Providers/ThemeManagement.dart';
 class AddTransaction extends StatefulWidget {
   final List<Category> categories;
   final Function refreshTransaction;
+  final List<RelatedWord> relatedWords;
 
-  AddTransaction(
-    this.categories,
-    this.refreshTransaction,
-  );
+  AddTransaction(this.categories,
+      this.relatedWords,
+      this.refreshTransaction,);
 
   @override
   State<AddTransaction> createState() => _AddTransactionState();
@@ -32,7 +33,9 @@ class _AddTransactionState extends State<AddTransaction> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: context.watch<ThemeManagement>().background,
+      backgroundColor: context
+          .watch<ThemeManagement>()
+          .background,
       body: Column(
         children: [
           const SizedBox(
@@ -46,7 +49,9 @@ class _AddTransactionState extends State<AddTransaction> {
                 },
                 icon: Icon(
                   Icons.arrow_back_ios_rounded,
-                  color: context.watch<ThemeManagement>().allIconColor,
+                  color: context
+                      .watch<ThemeManagement>()
+                      .allIconColor,
                 ),
               ),
               Expanded(
@@ -56,7 +61,9 @@ class _AddTransactionState extends State<AddTransaction> {
                     style: TextStyle(
                       fontSize: 30,
                       fontWeight: FontWeight.bold,
-                      color: context.watch<ThemeManagement>().allTextColor,
+                      color: context
+                          .watch<ThemeManagement>()
+                          .allTextColor,
                     ),
                   ),
                 ),
@@ -80,7 +87,9 @@ class _AddTransactionState extends State<AddTransaction> {
               child: Container(
                 decoration: BoxDecoration(
                   color:
-                      context.watch<ThemeManagement>().textfieldBackgroundColor,
+                  context
+                      .watch<ThemeManagement>()
+                      .textfieldBackgroundColor,
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: TextField(
@@ -88,39 +97,54 @@ class _AddTransactionState extends State<AddTransaction> {
                   controller: remarkController,
                   autofocus: false,
                   style: TextStyle(
-                    color: context.watch<ThemeManagement>().allTextColor,
+                    color: context
+                        .watch<ThemeManagement>()
+                        .allTextColor,
                   ),
+                  onChanged: (String input){
+
+                    for (var element in widget.relatedWords) {
+                      if(input.toLowerCase().contains(element.text.toLowerCase())){
+                        dropDownValue = widget.categories.firstWhere((a) => a.id == element.categoryID);
+                        setState(() {
+
+                        });
+                      }
+                    }
+                  },
                   decoration: InputDecoration(
                     contentPadding: const EdgeInsets.all(12.0),
                     hintText: "Remark",
                     hintStyle: TextStyle(
                       color:
-                          context.watch<ThemeManagement>().allTextColorOpacity5,
+                      context
+                          .watch<ThemeManagement>()
+                          .allTextColorOpacity5,
                     ),
                     fillColor: Colors.red,
                     enabledBorder: isRemarkEmpty
                         ? OutlineInputBorder(
-                            borderSide: const BorderSide(
-                              color: Colors.red,
-                              width: 1,
-                            ),
-                            borderRadius: BorderRadius.circular(12))
+                        borderSide: const BorderSide(
+                          color: Colors.red,
+                          width: 1,
+                        ),
+                        borderRadius: BorderRadius.circular(12))
                         : InputBorder.none,
                     focusedBorder: isRemarkEmpty
                         ? OutlineInputBorder(
-                            borderSide: const BorderSide(
-                              color: Colors.red,
-                              width: 1,
-                            ),
-                            borderRadius: BorderRadius.circular(12))
+                        borderSide: const BorderSide(
+                          color: Colors.red,
+                          width: 1,
+                        ),
+                        borderRadius: BorderRadius.circular(12))
                         : InputBorder.none,
                     border: isRemarkEmpty
                         ? OutlineInputBorder(
-                            borderSide: const BorderSide(
-                              color: Colors.red,
-                              width: 1,
-                            ),
-                            borderRadius: BorderRadius.circular(12))
+                        borderSide: const BorderSide(
+                          color: Colors.red,
+                          width: 1,
+                        ),
+                        borderRadius: BorderRadius.circular(12))
                         : InputBorder.none,
                   ),
                 ),
@@ -132,7 +156,9 @@ class _AddTransactionState extends State<AddTransaction> {
             child: Container(
               decoration: BoxDecoration(
                 color:
-                    context.watch<ThemeManagement>().textfieldBackgroundColor,
+                context
+                    .watch<ThemeManagement>()
+                    .textfieldBackgroundColor,
                 borderRadius: BorderRadius.circular(12),
               ),
               child: TextField(
@@ -141,39 +167,43 @@ class _AddTransactionState extends State<AddTransaction> {
                 maxLines: 1,
                 autofocus: false,
                 style: TextStyle(
-                  color: context.watch<ThemeManagement>().allTextColor,
+                  color: context
+                      .watch<ThemeManagement>()
+                      .allTextColor,
                 ),
                 decoration: InputDecoration(
                   contentPadding: const EdgeInsets.all(12.0),
                   hintText: "Amount",
                   hintStyle: TextStyle(
                     color:
-                        context.watch<ThemeManagement>().allTextColorOpacity5,
+                    context
+                        .watch<ThemeManagement>()
+                        .allTextColorOpacity5,
                   ),
                   fillColor: Colors.green,
                   enabledBorder: isAmountEmpty
                       ? OutlineInputBorder(
-                          borderSide: const BorderSide(
-                            color: Colors.red,
-                            width: 1,
-                          ),
-                          borderRadius: BorderRadius.circular(12))
+                      borderSide: const BorderSide(
+                        color: Colors.red,
+                        width: 1,
+                      ),
+                      borderRadius: BorderRadius.circular(12))
                       : InputBorder.none,
                   focusedBorder: isAmountEmpty
                       ? OutlineInputBorder(
-                          borderSide: const BorderSide(
-                            color: Colors.red,
-                            width: 1,
-                          ),
-                          borderRadius: BorderRadius.circular(12))
+                      borderSide: const BorderSide(
+                        color: Colors.red,
+                        width: 1,
+                      ),
+                      borderRadius: BorderRadius.circular(12))
                       : InputBorder.none,
                   border: isAmountEmpty
                       ? OutlineInputBorder(
-                          borderSide: const BorderSide(
-                            color: Colors.red,
-                            width: 1,
-                          ),
-                          borderRadius: BorderRadius.circular(12))
+                      borderSide: const BorderSide(
+                        color: Colors.red,
+                        width: 1,
+                      ),
+                      borderRadius: BorderRadius.circular(12))
                       : InputBorder.none,
                 ),
               ),
@@ -189,11 +219,15 @@ class _AddTransactionState extends State<AddTransaction> {
                     padding: const EdgeInsets.only(right: 12),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(12),
-                      color: context.watch<ThemeManagement>().containerColors,
+                      color: context
+                          .watch<ThemeManagement>()
+                          .containerColors,
                     ),
                     child: DropdownButton(
                       dropdownColor:
-                          context.watch<ThemeManagement>().containerColors,
+                      context
+                          .watch<ThemeManagement>()
+                          .containerColors,
                       onChanged: (i) {
                         setState(() {
                           dropDownValue = i as Category;
@@ -203,7 +237,8 @@ class _AddTransactionState extends State<AddTransaction> {
                       value: dropDownValue,
                       items: widget.categories
                           .map(
-                            (e) => DropdownMenuItem(
+                            (e) =>
+                            DropdownMenuItem(
                               value: e,
                               child: Padding(
                                 padding: const EdgeInsets.all(12.0),
@@ -217,7 +252,7 @@ class _AddTransactionState extends State<AddTransaction> {
                                 ),
                               ),
                             ),
-                          )
+                      )
                           .toList(),
                     ),
                   ),
@@ -233,7 +268,7 @@ class _AddTransactionState extends State<AddTransaction> {
                     ),
                     child: Padding(
                       padding:
-                          EdgeInsets.symmetric(vertical: 12.0, horizontal: 20),
+                      EdgeInsets.symmetric(vertical: 12.0, horizontal: 20),
                       child: InkWell(
                         onTap: () {
                           Navigator.pop(context);
@@ -269,7 +304,9 @@ class _AddTransactionState extends State<AddTransaction> {
                         duration: const Duration(milliseconds: 200),
                         color: (dropDownValue?.isExpense ?? true)
                             ? Colors.red
-                            : context.watch<ThemeManagement>().containerColors,
+                            : context
+                            .watch<ThemeManagement>()
+                            .containerColors,
                         child: Padding(
                           padding: const EdgeInsets.all(12.0),
                           child: Center(
@@ -279,8 +316,8 @@ class _AddTransactionState extends State<AddTransaction> {
                                 color: (dropDownValue?.isExpense ?? true)
                                     ? Colors.white
                                     : context
-                                        .watch<ThemeManagement>()
-                                        .allTextColor,
+                                    .watch<ThemeManagement>()
+                                    .allTextColor,
                               ),
                             ),
                           ),
@@ -303,7 +340,9 @@ class _AddTransactionState extends State<AddTransaction> {
                         duration: const Duration(milliseconds: 200),
                         color: !(dropDownValue?.isExpense ?? true)
                             ? Colors.green
-                            : context.watch<ThemeManagement>().containerColors,
+                            : context
+                            .watch<ThemeManagement>()
+                            .containerColors,
                         child: Padding(
                           padding: const EdgeInsets.all(12.0),
                           child: Center(
@@ -313,8 +352,8 @@ class _AddTransactionState extends State<AddTransaction> {
                                 color: !(dropDownValue?.isExpense ?? true)
                                     ? Colors.white
                                     : context
-                                        .watch<ThemeManagement>()
-                                        .allTextColor,
+                                    .watch<ThemeManagement>()
+                                    .allTextColor,
                               ),
                             ),
                           ),
@@ -347,7 +386,9 @@ class _AddTransactionState extends State<AddTransaction> {
                   amountController.text == ""
                       ? setState(() => isAmountEmpty = true)
                       : setState(() => isAmountEmpty = false);
-                  if (!isRemarkEmpty && !isAmountEmpty && dropDownValue!=null) {
+                  if (!isRemarkEmpty &&
+                      !isAmountEmpty &&
+                      dropDownValue != null) {
                     setState(() {
                       isDisabled = true;
                     });
@@ -356,15 +397,23 @@ class _AddTransactionState extends State<AddTransaction> {
                       categoryID: dropDownValue?.id ?? 0,
                       remark: remarkController.text,
                       amount: double.parse(amountController.text),
-                      meUser: context.read<LogInManagement>().meUser!,
+                      meUser: context
+                          .read<LogInManagement>()
+                          .meUser!,
                     )
                         .then((value) {
                       if (dropDownValue!.isExpense) {
-                        context.read<LogInManagement>().meUser?.bankBalance -=
+                        context
+                            .read<LogInManagement>()
+                            .meUser
+                            ?.bankBalance -=
                             double.parse(amountController.text);
                         context.read<LogInManagement>().userChange();
                       } else {
-                        context.read<LogInManagement>().meUser?.bankBalance +=
+                        context
+                            .read<LogInManagement>()
+                            .meUser
+                            ?.bankBalance +=
                             double.parse(amountController.text);
                         context.read<LogInManagement>().userChange();
                       }
@@ -383,7 +432,9 @@ class _AddTransactionState extends State<AddTransaction> {
                       "Add",
                       style: TextStyle(color: Colors.white, fontSize: 16),
                     ),
-                    SizedBox(width: 6,),
+                    SizedBox(
+                      width: 6,
+                    ),
                     Icon(
                       Icons.arrow_forward_rounded,
                       color: Colors.white,

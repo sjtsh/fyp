@@ -15,6 +15,8 @@ import 'SplashScreen.dart';
 import 'database.dart';
 import 'firebase_options.dart';
 import 'main_screen.dart';
+import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -55,7 +57,7 @@ class MyApp extends StatelessWidget {
       home: FutureBuilder(
         future: SharedPreferences.getInstance().then((prefs) =>
             UserService().fetchUsers(prefs.getInt("userID") ?? 0).then(
-              (value) {
+              (value) async {
                 context
                     .read<ThemeManagement>()
                     .setTheme(value.themePreference != "Light");

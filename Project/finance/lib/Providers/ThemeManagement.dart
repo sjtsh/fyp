@@ -8,6 +8,7 @@ class ThemeManagement
   bool isDark = false;
 
   setTheme(isDark) {
+    this.isDark = isDark;
     if (isDark) {
 
       background = Color(0xff1D1E20);

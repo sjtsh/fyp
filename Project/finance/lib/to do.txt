@@ -1,8 +1,5 @@
 #hard
-    dark theme, new UI, Animations, logo and splash screen
+    logo and splash screen
     comments and tooltip for hearing aids
-    clear data and deactivate functionality
-    donate button to donate through e-sewa
-    update and delete functionalities for categories and transaction
     try catch socket exceptions
     navigate to new page when clicked on a category given the related words and related transactions

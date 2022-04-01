@@ -53,7 +53,9 @@ class _TargetSavingScreenState extends State<TargetSavingScreen> {
                           contentPadding: const EdgeInsets.all(12.0),
                           hintText: "Bank balance",
                           hintStyle: TextStyle(
-                            color: Colors.black.withOpacity(0.5),
+                            color:  context
+                                .watch<ThemeManagement>()
+                                .allTextColorOpacity5,
                           ),
                           fillColor: Colors.green,
                           enabledBorder: isTargetSavingEmpty
@@ -103,9 +105,7 @@ class _TargetSavingScreenState extends State<TargetSavingScreen> {
                                 child: Text(
                                   "Cancel",
                                   style: TextStyle(
-                                      color: context
-                                          .watch<ThemeManagement>()
-                                          .allTextColorNegative),
+                                      color: Colors.white),
                                 )),
                           ),
                         ),
@@ -150,9 +150,7 @@ class _TargetSavingScreenState extends State<TargetSavingScreen> {
                                     : Text(
                                         "Confirm",
                                         style: TextStyle(
-                                            color: context
-                                                .watch<ThemeManagement>()
-                                                .allTextColorNegative),
+                                            color: Colors.white),
                                       )),
                           ),
                         ),
