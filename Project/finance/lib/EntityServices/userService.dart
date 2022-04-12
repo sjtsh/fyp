@@ -6,7 +6,7 @@ import '../database.dart';
 class UserService {
   Future<User> fetchUsers(int userID) async {
     final res = await http.get(
-      Uri.parse("http://$localhost/users/$userID"),
+      Uri.parse("http://$localhost/users/$userID/"),
     );
     if (res.statusCode == 200) {
       dynamic value = jsonDecode(res.body);
@@ -22,7 +22,7 @@ class UserService {
 
   Future<bool> deleteUser(int userID) async {
     final res = await http.delete(
-      Uri.parse("http://$localhost/user/$userID/delete"),
+      Uri.parse("http://$localhost/user/$userID/delete/"),
     );
     if (res.statusCode == 200) {
       return true;
@@ -34,7 +34,7 @@ class UserService {
   Future<User> changeThemePreference(
       {required String themePreference, required User meUser}) async {
     final res = await http.put(
-      Uri.parse("http://$localhost/user/${meUser.id}/update"),
+      Uri.parse("http://$localhost/user/${meUser.id}/update/"),
       body: <String, String>{
         "theme_preference": themePreference,
       },
@@ -50,7 +50,7 @@ class UserService {
   Future<User> changeTargetSaving(
       {required double monthlyTargetSaving, required User meUser}) async {
     final res = await http.put(
-      Uri.parse("http://$localhost/user/${meUser.id}/update"),
+      Uri.parse("http://$localhost/user/${meUser.id}/update/"),
       body: <String, String>{
         "monthly_target_saving": monthlyTargetSaving.toString(),
       },
@@ -66,7 +66,7 @@ class UserService {
   Future<User> changePinCode(
       {required int pinCode, required User meUser}) async {
     final res = await http.put(
-      Uri.parse("http://$localhost/user/${meUser.id}/update"),
+      Uri.parse("http://$localhost/user/${meUser.id}/update/"),
       body: <String, String>{
         "pin_code": pinCode.toString(),
       },
@@ -81,7 +81,7 @@ class UserService {
 
   Future<bool> removePinCode(User meUser) async {
     final res = await http.put(
-      Uri.parse("http://$localhost/user/${meUser.id}/update"),
+      Uri.parse("http://$localhost/user/${meUser.id}/update/"),
       body: <String, String>{
         "pin_code": "None",
       },
@@ -95,7 +95,7 @@ class UserService {
 
   Future<User> changeName({required String name, required User meUser}) async {
     final res = await http.put(
-      Uri.parse("http://$localhost/user/${meUser.id}/update"),
+      Uri.parse("http://$localhost/user/${meUser.id}/update/"),
       body: <String, String>{
         "name": name.toString(),
       },
@@ -111,7 +111,7 @@ class UserService {
   Future<User> changeAvatar(
       {required int avatarID, required User meUser}) async {
     final res = await http.put(
-      Uri.parse("http://$localhost/user/${meUser.id}/update"),
+      Uri.parse("http://$localhost/user/${meUser.id}/update/"),
       body: <String, String>{
         "avatar": avatarID.toString(),
       },

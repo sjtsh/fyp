@@ -204,7 +204,6 @@ class _SignUpDetailsScreenState extends State<SignUpDetailsScreen> {
                                     .pinController
                                     .text));
                             if (success) {
-                              initAll(BuildContext context) {
                                 context.read<ThemeManagement>().setTheme(context
                                         .read<LogInManagement>()
                                         .meUser
@@ -239,7 +238,6 @@ class _SignUpDetailsScreenState extends State<SignUpDetailsScreen> {
                                     ),
                                   );
                                 }
-                              }
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(

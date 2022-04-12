@@ -49,6 +49,7 @@ class _TargetSavingScreenState extends State<TargetSavingScreen> {
                         keyboardType: TextInputType.number,
                         maxLines: 1,
                         autofocus: false,
+                        style: TextStyle(color: context.watch<ThemeManagement>().allTextColor),
                         decoration: InputDecoration(
                           contentPadding: const EdgeInsets.all(12.0),
                           hintText: "Bank balance",
@@ -57,7 +58,9 @@ class _TargetSavingScreenState extends State<TargetSavingScreen> {
                                 .watch<ThemeManagement>()
                                 .allTextColorOpacity5,
                           ),
+
                           fillColor: Colors.green,
+
                           enabledBorder: isTargetSavingEmpty
                               ? OutlineInputBorder(
                                   borderSide: const BorderSide(

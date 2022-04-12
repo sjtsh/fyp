@@ -37,6 +37,7 @@ class _CorrectionScreenState extends State<CorrectionScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+    backgroundColor: context.watch<ThemeManagement>().background,
       body: Column(
         children: [
           const SizedBox(
@@ -125,8 +126,11 @@ class _CorrectionScreenState extends State<CorrectionScreen> {
                             .toString();
                   }
                 },
+                style: TextStyle(color: context.watch<ThemeManagement>().allTextColor),
                 decoration: InputDecoration(
-                  label: Text("Bank Balance"),
+
+                  label: Text("Bank Balance",
+                      style: TextStyle(color: context.watch<ThemeManagement>().allTextColor),),
                   contentPadding: const EdgeInsets.all(12.0),
                   hintText: "BankBalance",
                   hintStyle: TextStyle(
@@ -171,6 +175,7 @@ class _CorrectionScreenState extends State<CorrectionScreen> {
               ),
               child: TextField(
                 controller: amountController,
+                style: TextStyle(color: context.watch<ThemeManagement>().allTextColor),
                 onChanged: (String input) {
                   if (isExpense) {
                     currentBalanceController.text = (((context
@@ -214,10 +219,11 @@ class _CorrectionScreenState extends State<CorrectionScreen> {
                 autofocus: false,
                 decoration: InputDecoration(
                   contentPadding: const EdgeInsets.all(12.0),
-                  label: Text("Correction"),
+                  label: Text("Correction",
+                    style: TextStyle(color: context.watch<ThemeManagement>().allTextColor),),
                   hintText: "Correction",
                   hintStyle: TextStyle(
-                    color: Colors.black.withOpacity(0.5),
+                    color: context.watch<ThemeManagement>().allTextColorOpacity5
                   ),
                   fillColor: Colors.green,
                   enabledBorder: isAmountEmpty
@@ -262,11 +268,12 @@ class _CorrectionScreenState extends State<CorrectionScreen> {
                   maxLines: 100,
                   controller: remarkController,
                   autofocus: false,
+                  style: TextStyle(color: context.watch<ThemeManagement>().allTextColor),
                   decoration: InputDecoration(
                     contentPadding: const EdgeInsets.all(12.0),
                     hintText: "Remark",
                     hintStyle: TextStyle(
-                      color: Colors.black.withOpacity(0.5),
+                      color: context.watch<ThemeManagement>().allTextColorOpacity5,
                     ),
                     fillColor: Colors.green,
                     enabledBorder: isRemarkEmpty
@@ -323,7 +330,7 @@ class _CorrectionScreenState extends State<CorrectionScreen> {
                       ),
                       child: Material(
                         child: AnimatedContainer(
-                          color: isExpense ? Colors.red : Colors.white,
+                          color: isExpense ? Colors.red: context.watch<ThemeManagement>().containerColors,
                           duration: const Duration(milliseconds: 200),
                           child: Padding(
                             padding: const EdgeInsets.all(12.0),
@@ -331,13 +338,7 @@ class _CorrectionScreenState extends State<CorrectionScreen> {
                               child: Text(
                                 "Expense",
                                 style: TextStyle(
-                                  color: isExpense
-                                      ? context
-                                          .watch<ThemeManagement>()
-                                          .allTextColorNegative
-                                      : context
-                                          .watch<ThemeManagement>()
-                                          .allTextColor,
+                                  color: Colors.white,
                                 ),
                               ),
                             ),
@@ -371,7 +372,7 @@ class _CorrectionScreenState extends State<CorrectionScreen> {
                       ),
                       child: Material(
                         child: AnimatedContainer(
-                          color: !isExpense ? Colors.green : Colors.white,
+                          color: !isExpense ? Colors.green : context.watch<ThemeManagement>().containerColors,
                           duration: const Duration(milliseconds: 200),
                           child: Padding(
                             padding: const EdgeInsets.all(12.0),
@@ -379,8 +380,7 @@ class _CorrectionScreenState extends State<CorrectionScreen> {
                               child: Text(
                                 "Income",
                                 style: TextStyle(
-                                  color:
-                                      !isExpense ? context.watch<ThemeManagement>().allTextColorNegative : context.watch<ThemeManagement>().allTextColor,
+                                  color: Colors.white,
                                 ),
                               ),
                             ),
@@ -462,7 +462,7 @@ class _CorrectionScreenState extends State<CorrectionScreen> {
                 child: !isDisabled
                     ? Text(
                         "Add",
-                        style: TextStyle(color: context.watch<ThemeManagement>().allTextColorNegative,),
+                        style: TextStyle(color: Colors.white,),
                       )
                     : CircularProgressIndicator(),
               ),

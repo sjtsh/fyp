@@ -21,12 +21,13 @@ class LineChart extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-
                   Container(
                     height: 10,
                     width: 10,
                     decoration: BoxDecoration(
-                      color: context.watch<ThemeManagement>().lineChartColorPredicted,
+                      color: context
+                          .watch<ThemeManagement>()
+                          .lineChartColorPredicted,
                       shape: BoxShape.circle,
                     ),
                   ),
@@ -36,7 +37,8 @@ class LineChart extends StatelessWidget {
                   Text(
                     "Last Month",
                     style: TextStyle(
-                      color: context.watch<ThemeManagement>().allTextColorOpacity5,
+                      color:
+                          context.watch<ThemeManagement>().allTextColorOpacity5,
                       fontSize: 10,
                     ),
                   ),
@@ -47,7 +49,8 @@ class LineChart extends StatelessWidget {
                     height: 10,
                     width: 10,
                     decoration: BoxDecoration(
-                      color: context.watch<ThemeManagement>().lineChartColorActual,
+                      color:
+                          context.watch<ThemeManagement>().lineChartColorActual,
                       shape: BoxShape.circle,
                     ),
                   ),
@@ -57,7 +60,8 @@ class LineChart extends StatelessWidget {
                   Text(
                     "This Month",
                     style: TextStyle(
-                      color: context.watch<ThemeManagement>().allTextColorOpacity5,
+                      color:
+                          context.watch<ThemeManagement>().allTextColorOpacity5,
                       fontSize: 10,
                     ),
                   ),
@@ -78,7 +82,8 @@ class LineChart extends StatelessWidget {
                   Text(
                     "Predicted",
                     style: TextStyle(
-                      color: context.watch<ThemeManagement>().allTextColorOpacity5,
+                      color:
+                          context.watch<ThemeManagement>().allTextColorOpacity5,
                       fontSize: 10,
                     ),
                   ),

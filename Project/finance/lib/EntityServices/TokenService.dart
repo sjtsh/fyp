@@ -15,7 +15,7 @@ import '../database.dart';
 class TokenService {
   Future<bool> ananymousLogIn(BuildContext context) async {
     final res = await http.get(
-      Uri.parse("http://$localhost/users/ananymous"),
+      Uri.parse("http://$localhost/users/ananymous/"),
     );
     if (res.statusCode == 200) {
       us.User user = us.User.fromJson(jsonDecode(res.body));
@@ -43,7 +43,7 @@ class TokenService {
           await FirebaseAuth.instance.signInWithCredential(credential);
       if (creds.user != null && creds.user?.email != null) {
         final res = await http.post(
-          Uri.parse("http://$localhost/users/available"),
+          Uri.parse("http://$localhost/users/available/"),
           body: <String, String>{
             "email": creds.user?.email ?? "ananymous@gmail.com",
           },
@@ -56,9 +56,6 @@ class TokenService {
         } else {
           us.User user = us.User.fromJson(jsonDecode(res.body));
           context.read<LogInManagement>().meUser = user;
-          await http.get(
-            Uri.parse("http://$localhost/linearmodel/${user.id}/train"),
-          );
           return true;
         }
       } else {
@@ -98,7 +95,7 @@ class TokenService {
       context.read<LogInManagement>().meUser = user;
       context.read<LogInManagement>().userChange();
       await http.get(
-        Uri.parse("http://$localhost/linearmodel/${user.id}/train"),
+        Uri.parse("http://$localhost/linearmodel/${user.id}/train/"),
       );
       return true;
     } else {
@@ -124,10 +121,10 @@ class TokenService {
           await FirebaseAuth.instance.signInWithCredential(credential);
       if (creds.user != null && creds.user?.email != null) {
         print(
-            "http://$localhost/user/${context.read<LogInManagement>().meUser!.id}/update");
+            "http://$localhost/user/${context.read<LogInManagement>().meUser!.id}/update/");
         final res = await http.put(
           Uri.parse(
-              "http://$localhost/user/${context.read<LogInManagement>().meUser!.id}/update"),
+              "http://$localhost/user/${context.read<LogInManagement>().meUser!.id}/update/"),
           body: <String, String>{
             "email": creds.user?.email ?? "ananymous@gmail.com",
             "name": creds.user?.displayName ?? "ananymous",
@@ -138,7 +135,7 @@ class TokenService {
           context.read<LogInManagement>().meUser = user;
           context.read<LogInManagement>().userChange();
           await http.get(
-            Uri.parse("http://$localhost/linearmodel/${user.id}/train"),
+            Uri.parse("http://$localhost/linearmodel/${user.id}/train/"),
           );
           return true;
         } else {

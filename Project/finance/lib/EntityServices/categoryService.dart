@@ -31,7 +31,7 @@ class CategoryService {
     Map<String, String> aMap = <String, String>{
       'name': name.toString(),
       'user': meUser.id.toString(),
-      'is_expense': isExpense ? "True" : "False",
+      'is_expense': isExpense ? "true" : "false",
     };
     for (var element in words) {
       aMap[element] = "1";

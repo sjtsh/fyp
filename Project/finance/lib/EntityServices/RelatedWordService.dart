@@ -10,7 +10,7 @@ import '../database.dart';
 class RelatedWordService {
   Future<List<RelatedWord>> fetchRelatedWords(User user) async {
     final res = await http.get(
-      Uri.parse("http://$localhost/relatedwords/${user.id}"),
+      Uri.parse("http://$localhost/relatedwords/${user.id}/"),
     );
     if (res.statusCode == 200) {
       List<dynamic> values = jsonDecode(res.body);

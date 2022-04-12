@@ -1,7 +1,9 @@
 from django.http import JsonResponse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from financebackend.apis.linear import get_thresholds
 from financebackend.models import *
+from datetime import *
 
 from financebackend.serializers import category_serializer
 
@@ -10,7 +12,10 @@ def get_categorys_with_amounts(request):
     user = User.objects.get(id = request.headers['userID'])
     categories = Category.objects.all().filter(user = user)
     serializer = category_serializer(categories, many = True)
-    transactions = Transaction.objects.all().filter(user = user)
+    lastMonth = datetime.now() - timedelta(days=30)
+    transactions = Transaction.objects.all().filter(
+            user=user, date_time__date__range=(lastMonth, datetime.now()))
+    lastMonth30days = get_thresholds(request.headers['userID'])
     for i in serializer.data:
         my_id = i["id"]
         amount = 0
@@ -18,6 +23,13 @@ def get_categorys_with_amounts(request):
             if j.category.id == my_id:
                 amount += j.amount
         i["amount"] = amount
+        if my_id in lastMonth30days:
+            if i["amount"] > lastMonth30days[my_id]:
+                i["is_exceeded"] = True
+            else:
+                i["is_exceeded"] = False
+        else:
+            i["is_exceeded"] = False
     a = serializer.data
     a.sort(key=lambda x: x['amount'], reverse = True)
     return Response(a)
@@ -32,10 +44,11 @@ def get_category(request, pk):
 @api_view(['POST'])
 def insert_category(request):
     data = request.data
+    print(data['is_expense'])
     my_category = Category.objects.create(
         name = data['name'],
         user = User.objects.get(id = data["user"]),
-        is_expense = bool(data['is_expense']),
+        is_expense = data['is_expense'] == "true",
     )
     for i in data:
         if i != 'name' and i != 'user' and i != 'is_expense':

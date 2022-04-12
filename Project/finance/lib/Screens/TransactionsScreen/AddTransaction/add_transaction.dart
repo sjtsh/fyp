@@ -392,37 +392,33 @@ class _AddTransactionState extends State<AddTransaction> {
                     setState(() {
                       isDisabled = true;
                     });
-                    TransactionService()
-                        .createTransaction(
-                      categoryID: dropDownValue?.id ?? 0,
-                      remark: remarkController.text,
-                      amount: double.parse(amountController.text),
-                      meUser: context
-                          .read<LogInManagement>()
-                          .meUser!,
-                    )
-                        .then((value) {
-                      if (dropDownValue!.isExpense) {
-                        context
-                            .read<LogInManagement>()
-                            .meUser
-                            ?.bankBalance -=
-                            double.parse(amountController.text);
-                        context.read<LogInManagement>().userChange();
-                      } else {
-                        context
-                            .read<LogInManagement>()
-                            .meUser
-                            ?.bankBalance +=
-                            double.parse(amountController.text);
-                        context.read<LogInManagement>().userChange();
-                      }
-                      setState(() {
-                        isDisabled = false;
+                    try{
+                      TransactionService()
+                          .createTransaction(
+                        categoryID: dropDownValue?.id ?? 0,
+                        remark: remarkController.text,
+                        amount: double.parse(amountController.text),
+                        meUser: context.read<LogInManagement>().meUser!,
+                      )
+                          .then((value) {
+                        if (dropDownValue!.isExpense) {
+                          context.read<LogInManagement>().meUser?.bankBalance -=
+                              double.parse(amountController.text);
+                          context.read<LogInManagement>().userChange();
+                        } else {
+                          context.read<LogInManagement>().meUser?.bankBalance +=
+                              double.parse(amountController.text);
+                          context.read<LogInManagement>().userChange();
+                        }
+                        setState(() {
+                          isDisabled = false;
+                        });
+                        widget.refreshTransaction();
+                        Navigator.pop(context);
                       });
-                      widget.refreshTransaction();
-                      Navigator.pop(context);
-                    });
+                    }catch(e){
+
+                    }
                   }
                 },
                 child: Row(

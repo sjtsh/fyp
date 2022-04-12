@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:finance/Entities/category.dart';
 import 'package:finance/EntityServices/categoryService.dart';
 import 'package:finance/Providers/LogInManagement.dart';
@@ -32,7 +34,8 @@ class _PieChartPersonalState extends State<PieChartPersonal> {
             List<Category> allCategories = snapshot.data;
             if (allCategories.isEmpty) {
               return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 100, vertical: 100.0),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 100, vertical: 100.0),
                 child: Center(
                   child: Text(
                     "No Categories",
@@ -44,50 +47,43 @@ class _PieChartPersonalState extends State<PieChartPersonal> {
                 ),
               );
             } else {
-              pieListCategories = [[], [], []];
+              int numberoflists = min(
+                  3,
+                  allCategories.where((element) => element.isExpense).length ~/
+                          2 +
+                      1);
+              pieListCategories = List.generate(numberoflists, (index) => []);
               pieListCategories1 = [];
               allCategories
                   .where((element) => element.isExpense)
                   .toList()
-                  .sublist(0, 2)
+                  .sublist(
+                      0,
+                      min(
+                          5,
+                          allCategories
+                              .where((element) => element.isExpense)
+                              .length))
+                  .asMap()
+                  .entries
                   .forEach((element) {
-                pieListCategories[0].add([element.name, element.amount]);
-                pieListCategories1.add([element.name, element.amount]);
+                pieListCategories[element.key ~/ 2]
+                    .add([element.value.name, element.value.amount]);
+                pieListCategories1
+                    .add([element.value.name, element.value.amount]);
               });
-              allCategories
+              if(allCategories
                   .where((element) => element.isExpense)
-                  .toList()
-                  .sublist(2, 4)
-                  .forEach((element) {
-                pieListCategories[1].add([element.name, element.amount]);
-                pieListCategories1.add([element.name, element.amount]);
-              });
-              pieListCategories[2].add([
+                  .length > 5){
+                double othersTotal = 0;
                 allCategories
-                    .where((element) => element.isExpense)
-                    .toList()[4]
-                    .name,
-                allCategories
-                    .where((element) => element.isExpense)
-                    .toList()[4]
-                    .amount
-              ]);
-              pieListCategories1.add([
-                allCategories
-                    .where((element) => element.isExpense)
-                    .toList()[4]
-                    .name,
-                allCategories
-                    .where((element) => element.isExpense)
-                    .toList()[4]
-                    .amount
-              ]);
-              double othersTotal = 0;
-              allCategories.sublist(5, allCategories.length).forEach((element) {
-                othersTotal += element.amount;
-              });
-              pieListCategories[2].add(["others", othersTotal]);
-              pieListCategories1.add(["others", othersTotal]);
+                    .sublist(5, allCategories.length - 1)
+                    .forEach((element) {
+                  othersTotal += element.amount;
+                });
+                pieListCategories[2].add(["others", othersTotal]);
+                pieListCategories1.add(["others", othersTotal]);
+              }
               return SizedBox(
                 height: 300,
                 child: Column(

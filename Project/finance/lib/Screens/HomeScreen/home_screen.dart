@@ -3,11 +3,11 @@ import 'package:finance/Providers/ThemeManagement.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../Providers/AnalysisManagement.dart';
 import 'Chart/line_chart.dart';
 import 'MyPageView/my_page_view.dart';
 
 class HomeScreen extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -24,7 +24,6 @@ class HomeScreen extends StatelessWidget {
                 BoxShadow(
                   color: Colors.black.withOpacity(0.1),
                   offset: const Offset(0, 2),
-
                   blurRadius: 3,
                 ),
               ],
@@ -33,14 +32,20 @@ class HomeScreen extends StatelessWidget {
               color: context.watch<ThemeManagement>().containerColors,
               child: InkWell(
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) {
-                          return const ChartScreen();
-                        },
-                      ),
-                    );
+                    if ((context
+                                .read<AnalysisManagement>()
+                                .actualData15
+                                .values)
+                            .reduce((a, b) => a + b) !=
+                        0)
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) {
+                            return const ChartScreen();
+                          },
+                        ),
+                      );
                   },
                   child: const LineChart()),
             ),
